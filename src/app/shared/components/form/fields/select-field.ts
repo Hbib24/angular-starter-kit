@@ -1,31 +1,32 @@
 import { TemplateRef } from '@angular/core';
-import { AbstractField, AbstractFieldOptions } from './abstract-field';
+import { Field, FieldOptions } from './field';
 
-export interface SelectOption<T> {
-  value: T;
+export interface SelectOption {
+  value: string;
   label: string | TemplateRef<any>;
   disabled?: boolean;
   hidden?: boolean;
+  visisble?: boolean;
 }
 
 export enum SelectType {
   DEFAULT = 'default',
   RADIO = 'radio',
-  MULTI = 'multi',
+  TABS = 'tabs',
 }
 
-interface SelectFieldOptions<T> extends AbstractFieldOptions {
-  options?: SelectOption<T>[];
-  value?: T;
+interface SelectFieldOptions extends FieldOptions {
+  options?: SelectOption[];
+  value?: string;
   selectType?: SelectType;
 }
 
-export class SelectField<T> extends AbstractField {
-  options: SelectOption<T>[];
-  value?: T;
-  selectType?: SelectType;
+export class SelectField extends Field {
+  options: SelectOption[];
+  value?: string;
+  selectType: SelectType;
 
-  constructor(options: SelectFieldOptions<T>) {
+  constructor(options: SelectFieldOptions) {
     super(options);
     this.options = options.options || [];
     this.value = options.value;

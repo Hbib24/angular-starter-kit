@@ -1,8 +1,9 @@
+@if(isVisible && !isHidden) {
 <div [formGroup]="form()">
-  <label [attr.for]="field().name"
-    ><span class="text-red-500">{{ isRequired() ? "*" : "" }}</span>
-    {{ field().label }}</label
-  >
+  <label [attr.for]="field().name">
+    @if(isRequired) {<span class="text-red-500">*</span>}
+    {{ field().label }}
+  </label>
   <div class="*:w-full w-full">
     @if (isTextField) {
     <input [formControlName]="field().name" [id]="field().name" type="text" />
@@ -15,11 +16,12 @@
 
     }
   </div>
-  @if (!isValid) {
-  <div class="text-red-500">
-    <ng-container i18n="@@fieldValidationHint({{ field().name }})">
-      {{ field().validationHint || "defaultFieldValidationHint" }}
-    </ng-container>
+  @if (!isValid && isDirty && !isReadonly) {
+  <div class="text-red-500 text-xs">
+    <ng-container i18n="@@defaultFieldValidationHint"
+      >{{ field().name }} est invalide</ng-container
+    >
   </div>
   }
 </div>
+}

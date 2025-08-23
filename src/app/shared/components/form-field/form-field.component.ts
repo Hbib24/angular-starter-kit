@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, effect, input } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { NumericField } from '../form/fields/numeric-field';
 import { SelectField } from '../form/fields/select-field';
@@ -15,12 +15,32 @@ export class FormFieldComponent {
   readonly field = input.required<FormFieldType>();
   readonly form = input.required<FormGroup>();
   readonly control = computed(() => this.form().get(this.field().name));
-  readonly isValid = computed(
-    () => this.form().controls[this.field().name].valid
-  );
-  readonly isRequired = computed(() =>
-    this.control()?.hasValidator(Validators.required)
-  );
+
+  get isRequired() {
+    return this.control()?.hasValidator(Validators.required);
+  }
+
+  get isValid() {
+    return this.control()?.valid;
+  }
+
+  get isDirty() {
+    return this.control()?.dirty;
+  }
+
+  get isReadonly() {
+    return this.control()?.disabled;
+  }
+
+  get isVisible() {
+    const isVisible = this.field().visible;
+    return typeof isVisible === 'function' ? isVisible(this.form()) : isVisible;
+  }
+
+  get isHidden() {
+    const isHidden = this.field().hidden;
+    return typeof isHidden === 'function' ? isHidden(this.form()) : isHidden;
+  }
 
   get isTextField() {
     return this.field() instanceof TextField;
@@ -36,7 +56,7 @@ export class FormFieldComponent {
 
   get selectOptions() {
     if (this.isSelectField) {
-      return (this.field() as SelectField<any>).options;
+      return (this.field() as SelectField).options;
     }
     return [];
   }

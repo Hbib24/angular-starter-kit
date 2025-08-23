@@ -1,10 +1,10 @@
-import { AbstractFieldOptions, AbstractField } from './abstract-field';
+import { FieldOptions, Field } from './field';
 
-interface NumericFieldOptions extends AbstractFieldOptions {
+interface NumericFieldOptions extends FieldOptions {
   value?: number;
 }
 
-export class NumericField extends AbstractField {
+export class NumericField extends Field {
   value?: number;
 
   constructor(options: NumericFieldOptions) {

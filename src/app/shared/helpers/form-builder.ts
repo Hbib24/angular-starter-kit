@@ -1,6 +1,10 @@
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import { Form, FormFieldType } from '../components/form/form';
-import { effect } from '@angular/core';
 
 export class FormBuilder {
   static build(name: string, fields: FormFieldType[]): Form {
@@ -8,6 +12,7 @@ export class FormBuilder {
 
     fields.forEach((field: FormFieldType) => {
       this.handleRequired(formGroup, field);
+      this.handleReadonly(formGroup, field);
     });
 
     return new Form(name, fields, formGroup);
@@ -34,7 +39,7 @@ export class FormBuilder {
     control: FormControl
   ): FormControl {
     if (field.validators && field.validators.length > 0) {
-      field.validators.forEach((validator) => {
+      field.validators.forEach((validator: ValidatorFn | ValidatorFn[]) => {
         control.addValidators(validator);
       });
     }
@@ -51,13 +56,11 @@ export class FormBuilder {
 
     if (this.isRequired(field, formGroup)) {
       control.addValidators(Validators.required);
-      return;
     }
 
-    field.dependencies.forEach((dependency) => {
+    field.dependencies.forEach((dependency: string) => {
       formGroup.get(dependency)?.valueChanges.subscribe(() => {
         const isRequired = this.isRequired(field, formGroup);
-        console.log(isRequired);
         const hasRequiredValidator = control.hasValidator(Validators.required);
 
         if (isRequired && !hasRequiredValidator) {
@@ -69,6 +72,42 @@ export class FormBuilder {
         }
       });
     });
+  }
+
+  private static handleReadonly(
+    formGroup: FormGroup,
+    field: FormFieldType
+  ): void {
+    const control = formGroup.get(field.name);
+    if (!control) return;
+
+    if (this.isReadonly(field, formGroup)) {
+      control.disable({ emitEvent: false });
+    }
+
+    field.dependencies.forEach((dependency: string) => {
+      formGroup.get(dependency)?.valueChanges.subscribe(() => {
+        const isReadonly = this.isReadonly(field, formGroup);
+        const isDisabled = control.disabled;
+
+        if (isReadonly && !isDisabled) {
+          control.disable({ emitEvent: false });
+        } else if (!isReadonly && isDisabled) {
+          control.enable({ emitEvent: false });
+        }
+      });
+    });
+  }
+
+  private static isReadonly(
+    field: FormFieldType,
+    formGroup: FormGroup
+  ): boolean {
+    const isReadonly =
+      typeof field.readonly === 'function'
+        ? field.readonly(formGroup)
+        : field.readonly;
+    return isReadonly;
   }
 
   private static isRequired(

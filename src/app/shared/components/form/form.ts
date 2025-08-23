@@ -2,8 +2,15 @@ import { FormGroup } from '@angular/forms';
 import { NumericField } from './fields/numeric-field';
 import { SelectField } from './fields/select-field';
 import { TextField } from './fields/text-field';
+import { MultiSelectField } from './fields/multi-select-field';
+import { TemplateField } from './fields/template-field';
 
-export type FormFieldType = NumericField | TextField | SelectField<any>;
+export type FormFieldType =
+  | NumericField
+  | TextField
+  | SelectField
+  | MultiSelectField
+  | TemplateField;
 
 export class Form {
   readonly name: string;

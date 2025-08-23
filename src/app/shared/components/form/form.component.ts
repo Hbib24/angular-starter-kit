@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 import { FormFieldType } from './form';
 import { FormService } from '../../services/form.service';
-import { FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-form',

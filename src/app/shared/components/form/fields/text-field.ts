@@ -1,10 +1,10 @@
-import { AbstractField, AbstractFieldOptions } from './abstract-field';
+import { Field, FieldOptions } from './field';
 
-interface TextFieldOptions extends AbstractFieldOptions {
+interface TextFieldOptions extends FieldOptions {
   value?: string;
 }
 
-export class TextField extends AbstractField {
+export class TextField extends Field {
   value?: string;
 
   constructor(options: TextFieldOptions) {
