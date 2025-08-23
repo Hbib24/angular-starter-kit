@@ -1,0 +1,7 @@
+{
+  "locale": "en",
+  "translations": {
+    "defaultFieldValidationHint": "{{field}} is invalid",
+    "save": "Save"
+  }
+}

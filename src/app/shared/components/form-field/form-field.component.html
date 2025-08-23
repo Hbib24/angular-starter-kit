@@ -1,0 +1,25 @@
+<div [formGroup]="form()">
+  <label [attr.for]="field().name"
+    ><span class="text-red-500">{{ isRequired() ? "*" : "" }}</span>
+    {{ field().label }}</label
+  >
+  <div class="*:w-full w-full">
+    @if (isTextField) {
+    <input [formControlName]="field().name" [id]="field().name" type="text" />
+    } @if (isSelectField) {
+    <select [id]="field().name" [formControlName]="field().name">
+      @for (opt of selectOptions; track opt) {
+      <option [value]="opt.value">{{ opt.label }}</option>
+      }
+    </select>
+
+    }
+  </div>
+  @if (!isValid) {
+  <div class="text-red-500">
+    <ng-container i18n="@@fieldValidationHint({{ field().name }})">
+      {{ field().validationHint || "defaultFieldValidationHint" }}
+    </ng-container>
+  </div>
+  }
+</div>

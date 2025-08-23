@@ -1,0 +1,11 @@
+@theme static {
+  --color-primary: var(--color-emerald-500);
+  --color-surface: var(--color-zinc-400); // foreground like cards, modals, etc.
+  --color-background: var(--color-gray-100);
+}
+
+@theme .dark {
+  --color-primary: var(--color-emerald-600);
+  --color-surface: var(--color-zinc-900);
+  --color-background: var(--color-gray-900);
+}

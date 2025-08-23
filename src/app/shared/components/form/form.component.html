@@ -1,0 +1,24 @@
+<form
+  (ngSubmit)="handleSubmit()"
+  [formGroup]="formGroup()"
+  class="form grid grid-cols-24 gap-3"
+  [id]="formId()"
+>
+  @for (field of fields(); track field) {
+  <div
+    [ngClass]="[
+      'form-item-' + field.name.toLowerCase(),
+      'col-span-' + field.colspan
+    ]"
+  >
+    <app-form-field [field]="field" [form]="formGroup()" />
+  </div>
+  }
+  <div class="col-span-24 form-footer-wrapper">
+    <button class="form-submit" type="submit" [disabled]="!formGroup().valid">
+      <ng-content select="submit-content">
+        <span i18n="@@save">Enregistrer</span>
+      </ng-content>
+    </button>
+  </div>
+</form>
