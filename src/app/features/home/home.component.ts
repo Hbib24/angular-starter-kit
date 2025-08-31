@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { TextField } from '../../shared/components/form/fields/text-field';
 import { FormService } from '../../shared/services/form.service';
+import { TemplateField } from '../../shared/components/form/fields/template-field';
 
 @Component({
   selector: 'app-home',
@@ -22,10 +23,12 @@ export class HomeComponent {
     new TextField({
       label: 'Password check',
       name: 'passwordcheck',
-      readonly: (formGroup) => {
-        return !formGroup.get('password')?.value;
+      visible: (formGroup) => {
+        return formGroup.get('password')?.value;
       },
+      required: true,
       dependencies: ['password'],
     }),
+    new TemplateField({}),
   ];
 }

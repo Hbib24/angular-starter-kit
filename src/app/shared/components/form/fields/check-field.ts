@@ -1,7 +1,6 @@
 import { FieldOptions, Field } from './field';
 
 interface CheckFieldOptions extends FieldOptions {
-  value?: boolean;
   checkType?: CheckType;
 }
 
@@ -10,8 +9,7 @@ enum CheckType {
   SWITCH = 'switch',
 }
 
-export class CheckField extends Field {
-  value?: boolean;
+export class CheckField extends Field<boolean> {
   checkType: CheckType;
 
   constructor(options: CheckFieldOptions) {

@@ -21,10 +21,9 @@ interface TemplateFieldOptions {
   hidden?: boolean;
 }
 
-export class TemplateField extends Field {
+export class TemplateField extends Field<null> {
   template?: TemplateRef<any>;
   content?: string | TemplateRef<any>;
-  value = null;
 
   constructor(options: TemplateFieldOptions) {
     super({
@@ -38,5 +37,6 @@ export class TemplateField extends Field {
 
     this.template = options.template;
     this.content = options.content;
+    this.isTemplate = true;
   }
 }

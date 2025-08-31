@@ -1,4 +1,4 @@
-@if(isVisible && !isHidden) {
+@if(isVisible) {
 <div [formGroup]="form()">
   <label [attr.for]="field().name">
     @if(isRequired) {<span class="text-red-500">*</span>}
@@ -19,7 +19,7 @@
   @if (!isValid && isDirty && !isReadonly) {
   <div class="text-red-500 text-xs">
     <ng-container i18n="@@defaultFieldValidationHint"
-      >{{ field().name }} est invalide</ng-container
+      >{{ field().label }} est invalide</ng-container
     >
   </div>
   }

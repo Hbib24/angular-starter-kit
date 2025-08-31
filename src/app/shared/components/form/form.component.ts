@@ -30,13 +30,13 @@ export class FormComponent {
   formWrapperId = computed(() => `${this.form().name.toLowerCase()}-wrapper`);
   formGroup = computed(() => this.form().formGroup);
 
-  onSubmit = output<void>();
+  onSubmit = output<any>();
 
   handleSubmit() {
     if (this.formGroup().valid) {
       this.onSubmit.emit(this.formGroup().value);
     } else {
-      console.error('Form is invalid');
+      this.formGroup().markAllAsDirty();
     }
   }
 }

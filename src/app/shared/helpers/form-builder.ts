@@ -11,8 +11,11 @@ export class FormBuilder {
     const formGroup = this.createGroup(fields);
 
     fields.forEach((field: FormFieldType) => {
-      this.handleRequired(formGroup, field);
-      this.handleReadonly(formGroup, field);
+      if (!field.isTemplate) {
+        this.handleRequired(formGroup, field);
+        this.handleReadonly(formGroup, field);
+      }
+      this.handleVisibility(formGroup, field);
     });
 
     return new Form(name, fields, formGroup);
@@ -21,7 +24,9 @@ export class FormBuilder {
   static createGroup(fields: FormFieldType[]): FormGroup {
     const group = new FormGroup({});
     fields.forEach((field) => {
-      group.addControl(field.name, this.createControl(field));
+      if (!field.isTemplate) {
+        group.addControl(field.name, this.createControl(field));
+      }
     });
     return group;
   }
@@ -54,13 +59,13 @@ export class FormBuilder {
     const control = formGroup.get(field.name);
     if (!control) return;
 
-    if (this.isRequired(field, formGroup)) {
+    if (field.isRequired(formGroup)) {
       control.addValidators(Validators.required);
     }
 
     field.dependencies.forEach((dependency: string) => {
       formGroup.get(dependency)?.valueChanges.subscribe(() => {
-        const isRequired = this.isRequired(field, formGroup);
+        const isRequired = field.isRequired(formGroup);
         const hasRequiredValidator = control.hasValidator(Validators.required);
 
         if (isRequired && !hasRequiredValidator) {
@@ -81,13 +86,13 @@ export class FormBuilder {
     const control = formGroup.get(field.name);
     if (!control) return;
 
-    if (this.isReadonly(field, formGroup)) {
+    if (field.isReadonly(formGroup)) {
       control.disable({ emitEvent: false });
     }
 
     field.dependencies.forEach((dependency: string) => {
       formGroup.get(dependency)?.valueChanges.subscribe(() => {
-        const isReadonly = this.isReadonly(field, formGroup);
+        const isReadonly = field.isReadonly(formGroup);
         const isDisabled = control.disabled;
 
         if (isReadonly && !isDisabled) {
@@ -99,25 +104,25 @@ export class FormBuilder {
     });
   }
 
-  private static isReadonly(
-    field: FormFieldType,
-    formGroup: FormGroup
-  ): boolean {
-    const isReadonly =
-      typeof field.readonly === 'function'
-        ? field.readonly(formGroup)
-        : field.readonly;
-    return isReadonly;
-  }
+  private static handleVisibility(
+    formGroup: FormGroup,
+    field: FormFieldType
+  ): void {
+    const control = formGroup.get(field.name);
+    if (!control) return;
 
-  private static isRequired(
-    field: FormFieldType,
-    formGroup: FormGroup
-  ): boolean {
-    const isRequired =
-      typeof field.required === 'function'
-        ? field.required(formGroup)
-        : field.required;
-    return isRequired;
+    if (!field.isVisible(formGroup)) {
+      control.disable({ emitEvent: false });
+    }
+
+    field.dependencies.forEach((dependency: string) => {
+      formGroup.get(dependency)?.valueChanges.subscribe(() => {
+        if (field.isVisible(formGroup)) {
+          control.enable({ emitEvent: false });
+        } else {
+          control.disable({ emitEvent: false });
+        }
+      });
+    });
   }
 }

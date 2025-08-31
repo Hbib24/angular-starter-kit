@@ -1,4 +1,4 @@
-import { Component, computed, effect, input } from '@angular/core';
+import { Component, computed, effect, inject, input } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { NumericField } from '../form/fields/numeric-field';
 import { SelectField } from '../form/fields/select-field';
@@ -33,13 +33,7 @@ export class FormFieldComponent {
   }
 
   get isVisible() {
-    const isVisible = this.field().visible;
-    return typeof isVisible === 'function' ? isVisible(this.form()) : isVisible;
-  }
-
-  get isHidden() {
-    const isHidden = this.field().hidden;
-    return typeof isHidden === 'function' ? isHidden(this.form()) : isHidden;
+    return this.field().isVisible(this.form());
   }
 
   get isTextField() {

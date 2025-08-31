@@ -3,12 +3,10 @@ import { SelectOption } from './select-field';
 
 interface MultiSelectFieldOptions extends FieldOptions {
   options?: SelectOption[];
-  value?: string[];
 }
 
-export class MultiSelectField extends Field {
+export class MultiSelectField extends Field<string[]> {
   options: SelectOption[];
-  value: string[];
 
   constructor(options: MultiSelectFieldOptions) {
     super(options);
