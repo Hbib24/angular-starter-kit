@@ -7,6 +7,7 @@ import { HomeComponent } from './features/home/home.component';
 import { CommonComponent } from './layouts/common/common.component';
 import { NotFoundComponent } from './features/not-found/not-found.component';
 import { SharedModule } from './shared/shared.module';
+import { HttpClient } from '@angular/common/http';
 
 @NgModule({
   declarations: [

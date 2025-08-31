@@ -3,7 +3,7 @@ import { FormBuilder } from '../helpers/form-builder';
 import { Form, FormFieldType } from '../components/form/form';
 import { FormGroup, Validators } from '@angular/forms';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class FormService {
   private readonly forms: Map<string, Form> = new Map();
 
