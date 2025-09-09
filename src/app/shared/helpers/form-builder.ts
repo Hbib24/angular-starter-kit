@@ -4,13 +4,13 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-import { Form, FormFieldType } from '../components/form/form';
+import { FormField } from '../components/form/fields/field';
 
 export class FormBuilder {
-  static build(name: string, fields: FormFieldType[]): Form {
+  static build(fields: FormField[]) {
     const formGroup = this.createGroup(fields);
 
-    fields.forEach((field: FormFieldType) => {
+    fields.forEach((field: FormField) => {
       if (!field.isTemplate) {
         this.handleRequired(formGroup, field);
         this.handleReadonly(formGroup, field);
@@ -18,10 +18,10 @@ export class FormBuilder {
       this.handleVisibility(formGroup, field);
     });
 
-    return new Form(name, fields, formGroup);
+    return formGroup;
   }
 
-  static createGroup(fields: FormFieldType[]): FormGroup {
+  static createGroup(fields: FormField[]): FormGroup {
     const group = new FormGroup({});
     fields.forEach((field) => {
       if (!field.isTemplate) {
@@ -31,7 +31,7 @@ export class FormBuilder {
     return group;
   }
 
-  static createControl(field: FormFieldType): FormControl {
+  static createControl(field: FormField): FormControl {
     let control = new FormControl(field.value);
 
     control = this.applyValidators(field, control);
@@ -40,7 +40,7 @@ export class FormBuilder {
   }
 
   private static applyValidators(
-    field: FormFieldType,
+    field: FormField,
     control: FormControl
   ): FormControl {
     if (field.validators && field.validators.length > 0) {
@@ -52,10 +52,7 @@ export class FormBuilder {
     return control;
   }
 
-  private static handleRequired(
-    formGroup: FormGroup,
-    field: FormFieldType
-  ): void {
+  private static handleRequired(formGroup: FormGroup, field: FormField): void {
     const control = formGroup.get(field.name);
     if (!control) return;
 
@@ -79,10 +76,7 @@ export class FormBuilder {
     });
   }
 
-  private static handleReadonly(
-    formGroup: FormGroup,
-    field: FormFieldType
-  ): void {
+  private static handleReadonly(formGroup: FormGroup, field: FormField): void {
     const control = formGroup.get(field.name);
     if (!control) return;
 
@@ -106,7 +100,7 @@ export class FormBuilder {
 
   private static handleVisibility(
     formGroup: FormGroup,
-    field: FormFieldType
+    field: FormField
   ): void {
     const control = formGroup.get(field.name);
     if (!control) return;

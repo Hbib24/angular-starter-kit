@@ -1,13 +1,7 @@
-import {
-  Component,
-  computed,
-  effect,
-  inject,
-  input,
-  output,
-} from '@angular/core';
-import { FormFieldType } from './form';
+import { Component, computed, inject, input, output } from '@angular/core';
 import { FormService } from '../../services/form.service';
+import { Form, FormGroup } from '@angular/forms';
+import { FormField } from './fields/field';
 
 @Component({
   selector: 'app-form',
@@ -16,27 +10,51 @@ import { FormService } from '../../services/form.service';
   styleUrls: ['./form.component.scss'],
   host: {
     class: 'form-wrapper',
-    '[id]': 'formWrapperId()',
+    '[id]': '_formWrapperId()',
   },
 })
 export class FormComponent {
   formService = inject(FormService);
 
-  name = input<string>();
-  fields = input.required<FormFieldType[]>();
+  name = input<string>('form');
+  fields = input.required<FormField[]>();
+  loading = input<boolean>(false);
+  showReset = input<boolean>(false);
+  showSubmit = input<boolean>(true);
+  formGroup = input<FormGroup>();
 
-  form = computed(() => this.formService.create(this.fields(), this.name()));
-  formId = computed(() => `${this.form().name.toLowerCase()}`);
-  formWrapperId = computed(() => `${this.form().name.toLowerCase()}-wrapper`);
-  formGroup = computed(() => this.form().formGroup);
+  _formId = computed(() => this.name().toLowerCase());
+  _formGroup = computed(
+    () => this.formGroup() || this.formService.create(this.fields())
+  );
+  _formWrapperId = computed(() => `${this.name().toLowerCase()}-wrapper`);
 
   onSubmit = output<any>();
+  onReset = output<void>();
+  onValueChanges = output<any>();
+
+  ngOnInit(): void {
+    this._formGroup().valueChanges.subscribe(() => {
+      this.onValueChanges.emit(this._formGroup().value);
+    });
+  }
+
+  getColSpan(field: FormField) {
+    return `col-span-${field.colspan}`;
+  }
 
   handleSubmit() {
-    if (this.formGroup().valid) {
-      this.onSubmit.emit(this.formGroup().value);
+    if (this._formGroup().valid) {
+      const values = this._formGroup().value;
+      const formattedValues = this.formService.formatValues(
+        values,
+        this.fields()
+      );
+      const formattedStructure =
+        this.formService.handleNestedFields(formattedValues);
+      this.onSubmit.emit(formattedStructure);
     } else {
-      this.formGroup().markAllAsDirty();
+      this._formGroup().markAllAsDirty();
     }
   }
 }

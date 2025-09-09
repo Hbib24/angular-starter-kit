@@ -1,8 +1,8 @@
 <form
   (ngSubmit)="handleSubmit()"
-  [formGroup]="formGroup()"
+  [formGroup]="_formGroup()"
   class="form grid grid-cols-24 gap-3"
-  [id]="formId()"
+  [id]="_formId()"
 >
   @for (field of fields(); track field) {
   <div
@@ -11,7 +11,7 @@
       'col-span-' + field.colspan
     ]"
   >
-    <app-form-field [field]="field" [form]="formGroup()" />
+    <app-form-field [field]="field" [form]="_formGroup()" />
   </div>
   }
   <div class="col-span-24 form-footer-wrapper">

@@ -10,13 +10,18 @@ import {
   HTTP_INTERCEPTORS,
   provideHttpClient,
   withFetch,
-  withInterceptors,
   withInterceptorsFromDi,
 } from '@angular/common/http';
 import { AuthInterceptor } from '../core/interceptors/auth-interceptor';
+import { ListComponent } from './components/list/list.component';
 
 @NgModule({
-  declarations: [FormComponent, FormFieldComponent, CardComponent],
+  declarations: [
+    FormComponent,
+    FormFieldComponent,
+    CardComponent,
+    ListComponent,
+  ],
   imports: [CommonModule, ReactiveFormsModule, FormsModule],
   providers: [
     provideHttpClient(withFetch(), withInterceptorsFromDi()),

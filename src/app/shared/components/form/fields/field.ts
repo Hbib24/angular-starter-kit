@@ -1,12 +1,26 @@
 import { TemplateRef } from '@angular/core';
 import { FormGroup, ValidatorFn } from '@angular/forms';
 import { TemplateField } from './template-field';
+import { MultiSelectField } from './multi-select-field';
+import { NumericField } from './numeric-field';
+import { SelectField } from './select-field';
+import { TextField } from './text-field';
+
+export type FormField =
+  | NumericField
+  | TextField
+  | SelectField
+  | MultiSelectField
+  | TemplateField;
 
 export interface FieldOptions {
+  /**
+   * Separate with ':' for nested fields
+   */
   name: string;
   label?: string | TemplateRef<any>;
   value?: any;
-  placeholder?: string | TemplateRef<any>;
+  placeholder?: string;
   required?: boolean | ((formGroup: FormGroup) => boolean);
   readonly?: boolean | ((formGroup: FormGroup) => boolean);
   visible?: boolean | ((formGroup: FormGroup) => boolean);
@@ -26,6 +40,7 @@ export interface FieldOptions {
    * REQUIRED IF USING CONDITIONAL REQUIRED, READONLY, VISIBILITY
    */
   dependencies?: string[];
+  showFeedback?: boolean;
   /**
    * Format the submitted value
    */
@@ -37,7 +52,7 @@ export abstract class Field<T> {
   readonly name: string;
   readonly label?: string | TemplateRef<any>;
   value: T;
-  readonly placeholder?: string | TemplateRef<any>;
+  readonly placeholder?: string;
   readonly required: boolean | ((formGroup: FormGroup) => boolean);
   readonly readonly: boolean | ((formGroup: FormGroup) => boolean);
   readonly visible: boolean | ((formGroup: FormGroup) => boolean);
@@ -45,6 +60,7 @@ export abstract class Field<T> {
   readonly validators: ValidatorFn[];
   readonly validationHint?: string | TemplateRef<any>;
   readonly dependencies: string[];
+  showFeedback: boolean;
   hint?: string | TemplateRef<any>;
   colspan: number;
   isTemplate = false;
@@ -55,7 +71,8 @@ export abstract class Field<T> {
     this.name = options.name;
     this.label = options.label;
     this.value = options.value || null;
-    this.placeholder = options.placeholder || options.label;
+    this.placeholder =
+      options.placeholder || (typeof this.label === 'string' ? this.label : '');
     this.required = options.required || false;
     this.readonly = options.readonly || false;
     this.visible = options.visible || true;
@@ -65,6 +82,8 @@ export abstract class Field<T> {
     this.hint = options.hint;
     this.colspan = options.colspan || 24;
     this.dependencies = options.dependencies || [];
+    this.showFeedback =
+      options.showFeedback === undefined ? true : options.showFeedback;
     this.formatValue = options.formatValue;
     this.onValueChange = options.onValueChange;
   }

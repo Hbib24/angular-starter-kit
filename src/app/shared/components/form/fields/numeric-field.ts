@@ -6,6 +6,8 @@ interface NumericFieldOptions extends FieldOptions {
   maxDecimals?: number;
   minDecimals?: number;
   allowNegative?: boolean;
+  formatter?: (value: number) => any;
+  stringify?: boolean;
 }
 
 export class NumericField extends Field<number> {
@@ -14,6 +16,8 @@ export class NumericField extends Field<number> {
   maxDecimals?: number;
   minDecimals?: number;
   allowNegative: boolean;
+  formatter?: (value: number) => any;
+  stringify: boolean;
 
   constructor(options: NumericFieldOptions) {
     super(options);
@@ -23,5 +27,7 @@ export class NumericField extends Field<number> {
     this.maxDecimals = options.maxDecimals;
     this.minDecimals = options.minDecimals;
     this.allowNegative = options.allowNegative || false;
+    this.formatter = options.formatter;
+    this.stringify = options.stringify === undefined ? true : options.stringify;
   }
 }
