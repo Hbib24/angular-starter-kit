@@ -14,6 +14,8 @@ import {
 } from '@angular/common/http';
 import { AuthInterceptor } from '../core/interceptors/auth-interceptor';
 import { ListComponent } from './components/list/list.component';
+import { TableComponent } from './components/table/table.component';
+import { FilterComponent } from './components/filter/filter.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +23,8 @@ import { ListComponent } from './components/list/list.component';
     FormFieldComponent,
     CardComponent,
     ListComponent,
+    TableComponent,
+    FilterComponent,
   ],
   imports: [CommonModule, ReactiveFormsModule, FormsModule],
   providers: [
