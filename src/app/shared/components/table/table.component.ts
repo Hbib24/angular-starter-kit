@@ -1,10 +1,14 @@
-import { Component, input, output, TemplateRef } from '@angular/core';
-import { Getter, PaginatedResponse } from '../../helpers/getter-response';
+import { Component, input, OnInit, output, TemplateRef } from '@angular/core';
+import { defaultGetter, Getter } from '../../helpers/getter';
+import { Currency } from '../../helpers/currency';
 
 export interface Column {
-  label: string;
   key: string;
-  type?: 'date' | 'time' | 'datetime';
+  label?: string;
+  type?: 'date' | 'time' | 'datetime' | Currency;
+  hidden?: boolean;
+  fixed?: 'left' | 'right';
+  format?: (value: any) => any;
 }
 
 @Component({
@@ -13,25 +17,36 @@ export interface Column {
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',
 })
-export class TableComponent {
+export class TableComponent implements OnInit {
   columns = input.required<Column[]>();
   itemTemplates = input<{ [key: string]: TemplateRef<{ $implicit: any }> }>({});
-  loading = false;
-
   pagination = input(true);
-  items: { [key: string]: any }[] = [];
-  totalSize = 0;
-  page = 1;
+  getter = input<Getter>(defaultGetter);
 
   refreshEvent = output<{ [key: string]: any }>();
 
-  getter = input.required<Getter>();
+  protected items: { [key: string]: any }[] = [];
+  protected loading = false;
+  protected error = false;
+  protected totalSize = 0;
+  protected page = 1;
 
-  async getItems(params?: any) {
+  ngOnInit(): void {
+    this.setItems();
+  }
+
+  async setItems(params?: any) {
     this.loading = true;
-    const { count, data } = await this.getter()(params);
-    this.items = data;
-    this.totalSize = count;
-    this.loading = false;
+    this.error = false;
+
+    try {
+      const { count, data } = await this.getter()(params);
+      this.items = data;
+      this.totalSize = count;
+    } catch (error) {
+      this.error = true;
+    } finally {
+      this.loading = false;
+    }
   }
 }

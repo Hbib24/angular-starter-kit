@@ -1,1 +1,8 @@
-<p>filter works!</p>
+<app-form
+  [fields]="fields()"
+  [showReset]="showReset()"
+  [showSubmit]="showSubmit()"
+  (onFilter)="onFilter.emit($event)"
+  (onReset)="onReset.emit()"
+  (onValueChanges)="onValueChanges.emit($event)"
+/>

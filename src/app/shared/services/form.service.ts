@@ -58,4 +58,12 @@ export class FormService {
 
     return result;
   }
+
+  getDefaultValues(fields: FormField[]) {
+    const result: any = {};
+    fields.forEach((field) => {
+      if (field.value) result[field.name] = field.value;
+    });
+    return result;
+  }
 }

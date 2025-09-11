@@ -23,6 +23,9 @@ export class FormComponent {
   showSubmit = input<boolean>(true);
   formGroup = input<FormGroup>();
 
+  _defaultValues = computed(() =>
+    this.formService.getDefaultValues(this.fields())
+  );
   _formId = computed(() => this.name().toLowerCase());
   _formGroup = computed(
     () => this.formGroup() || this.formService.create(this.fields())
@@ -30,7 +33,7 @@ export class FormComponent {
   _formWrapperId = computed(() => `${this.name().toLowerCase()}-wrapper`);
 
   onSubmit = output<any>();
-  onReset = output<void>();
+  onReset = output<any>();
   onValueChanges = output<any>();
 
   ngOnInit(): void {
@@ -56,5 +59,17 @@ export class FormComponent {
     } else {
       this._formGroup().markAllAsDirty();
     }
+  }
+
+  handleReset() {
+    const defaultValues = this._defaultValues();
+    const formattedValues = this.formService.formatValues(
+      defaultValues,
+      this.fields()
+    );
+    const formattedStructure =
+      this.formService.handleNestedFields(formattedValues);
+    this._formGroup().reset(formattedStructure);
+    this.onReset.emit(formattedStructure);
   }
 }
