@@ -59,6 +59,11 @@
           {{ getValue(col.key, row) | date : "dd/MM/yyyy HH:mm" }}
           } @else if(col.format ){
           {{ col.format(getValue(col.key, row), row) }}
+          } @else if(col.type === 'currency') {
+          <app-currency-display
+            [isoCode]="getValue(col.key, row)"
+            [displayText]="true"
+          ></app-currency-display>
           } @else {
           {{ getValue(col.key, row) }}
           }
