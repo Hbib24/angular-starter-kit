@@ -4,6 +4,7 @@ import { ROUTES } from './core/routes';
 import { CommonComponent } from './layouts/common/common.component';
 import { NotFoundComponent } from './features/not-found/not-found.component';
 import { HomeComponent } from './features/home/home.component';
+import { devEnvironmentGuard } from './core/guards/dev-environment.guard';
 
 const routes: Routes = [
   {
@@ -15,6 +16,11 @@ const routes: Routes = [
     path: '',
     loadChildren: () =>
       import('./features/auth/auth.module').then((m) => m.AuthModule),
+  },
+  {
+    path: '',
+    canMatch: [devEnvironmentGuard],
+    loadChildren: () => import('./test/test.module').then((m) => m.TestModule),
   },
   { path: '**', component: NotFoundComponent },
 ];

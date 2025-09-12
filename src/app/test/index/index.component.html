@@ -1,0 +1,17 @@
+<div class="p-4">
+  <div class="border border-zinc-400 p-4">
+    <ul nz-menu nzMode="horizontal">
+      <li nz-menu-item nzMatchRouter>
+        <a [routerLink]="['/', 'test', 'form']">Form</a>
+      </li>
+      <li nz-menu-item nzMatchRouter>
+        <a [routerLink]="['/', 'test', 'table']">Table</a>
+      </li>
+    </ul>
+  </div>
+  <div
+    class="border mt-4 border-zinc-400 p-4 flex gap-4 items-center justify-center"
+  >
+    <router-outlet></router-outlet>
+  </div>
+</div>

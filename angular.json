@@ -15,33 +15,31 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
+          "type": "component",
           "style": "scss",
           "standalone": false,
-          "skipTests": true,
-          "type": "component"
-        },
-        "@schematics/angular:service": {
-          "skipTests": true,
-          "type": "service"
+          "skipTests": true
         },
         "@schematics/angular:directive": {
-          "standalone": false,
+          "type": "directive",
           "skipTests": true
         },
-        "@schematics/angular:pipe": {
-          "standalone": false,
-          "skipTests": true
-        },
+        "@schematics/angular:service": { "type": "service", "skipTests": true },
         "@schematics/angular:guard": {
+          "typeSeparator": ".",
           "skipTests": true
         },
         "@schematics/angular:interceptor": {
-          "skipTests": true,
-          "functional": false
+          "typeSeparator": ".",
+          "skipTests": true
         },
         "@schematics/angular:module": {
-          "skipTests": true,
-          "type": "module"
+          "typeSeparator": "."
+        },
+        "@schematics/angular:pipe": { "typeSeparator": ".", "skipTests": true },
+        "@schematics/angular:resolver": {
+          "typeSeparator": ".",
+          "skipTests": true
         }
       },
       "root": "",
@@ -61,7 +59,11 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.scss"]
+            "styles": [
+              "node_modules/ng-zorro-antd/ng-zorro-antd.min.css",
+              "src/styles.scss",
+              "src/theme.less"
+            ]
           },
           "configurations": {
             "production": {

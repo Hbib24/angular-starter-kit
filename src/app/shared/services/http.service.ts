@@ -1,6 +1,6 @@
 import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Response } from '../../models/http-response';
+import { Response } from '../../core/helpers/http-response';
 import { environment } from '../../../environments/environment';
 import { BYPASS_AUTH } from '../../core/helpers/auth-context.token';
 

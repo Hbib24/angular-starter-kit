@@ -1,1 +1,52 @@
-<p>table works!</p>
+<nz-table
+  [nzFrontPagination]="false"
+  [nzLoading]="loading"
+  [nzData]="items"
+  [nzTotal]="totalSize"
+  [nzPageIndex]="page"
+  (nzPageIndexChange)="onPageChange($event)"
+  nzSize="small"
+  [nzScroll]="{ x: 'max-content' }"
+  nzBordered
+  nzOuterBordered
+  #table
+>
+  <thead>
+    <tr>
+      @for (col of columns(); track col) {
+      <th [nzCellControl]="col.key">
+        {{ col.label }}
+      </th>
+      }
+    </tr>
+  </thead>
+  <tbody>
+    @for(row of table.data; let i = $index; track i) {
+    <tr>
+      @for (col of columns(); track col) {
+      <td [nzCellControl]="col.key">
+        @if(itemTemplates()[col.key]) {
+        <ng-container
+          [ngTemplateOutlet]="itemTemplates()[col.key]"
+          [ngTemplateOutletContext]="{ $implicit: { item: row, index: i } }"
+        >
+        </ng-container>
+        } @else {
+        <ng-container>
+          @if (col.type === 'date') {
+          {{ getValue(col.key, row) | date : "dd/MM/yyyy" }}
+          } @else if(col.type === 'time') {
+          {{ getValue(col.key, row) | date : "HH:mm" }}
+          } @else if (col.type === 'datetime') {
+          {{ getValue(col.key, row) | date : "dd/MM/yyyy HH:mm" }}
+          } @else {
+          {{ getValue(col.key, row) }}
+          }
+        </ng-container>
+        }
+      </td>
+      }
+    </tr>
+    }
+  </tbody>
+</nz-table>

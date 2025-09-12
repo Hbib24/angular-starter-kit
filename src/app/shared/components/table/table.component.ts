@@ -49,4 +49,23 @@ export class TableComponent implements OnInit {
       this.loading = false;
     }
   }
+
+  getValue(headerVal: string, item: any): string {
+    if (headerVal.split('').includes('.')) {
+      const keys = headerVal.split('.');
+      try {
+        keys.forEach((e) => (item = item[e]));
+        return item;
+      } catch (e) {
+        return '';
+      }
+    } else {
+      return item[headerVal];
+    }
+  }
+
+  onPageChange = (page: number) => {
+    this.page = page;
+    this.setItems({ page: this.page });
+  };
 }

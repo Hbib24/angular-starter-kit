@@ -1,9 +1,8 @@
 import { Component, computed, input } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
-import { NumericField } from '../form/fields/numeric-field';
-import { SelectField, SelectOption } from '../form/fields/select-field';
-import { TextField } from '../form/fields/text-field';
+import { SelectOption } from '../form/fields/select-field';
 import { FormField } from '../form/fields/field';
+import { FieldAdapter } from '../../helpers/field-adapter';
 
 @Component({
   selector: 'app-form-field',
@@ -16,11 +15,13 @@ export class FormFieldComponent {
   readonly form = input.required<FormGroup>();
   readonly control = computed(() => this.form().get(this.field().name));
 
-  constructor() {
-    if (this.isSelectField) this.setSelectOptions();
+  ngOnInit() {
+    this.adapter = new FieldAdapter(this.field());
+    if (this.adapter.isSelectField) this.setSelectOptions();
   }
 
   selectOptions: SelectOption[] = [];
+  adapter!: FieldAdapter;
 
   get isRequired() {
     return this.control()?.hasValidator(Validators.required);
@@ -42,24 +43,18 @@ export class FormFieldComponent {
     return this.field().isVisible(this.form());
   }
 
-  get isTextField() {
-    return this.field() instanceof TextField;
+  get dateType() {
+    return this.adapter.fieldAsDateField.type == 'time'
+      ? 'date'
+      : this.adapter.fieldAsDateField.type;
   }
 
-  get isNumericField() {
-    return this.field() instanceof NumericField;
-  }
-
-  get isSelectField() {
-    return this.field() instanceof SelectField;
-  }
-
-  get fieldAsSelectField() {
-    return this.field() as SelectField;
+  disabledDate() {
+    return true;
   }
 
   setSelectOptions() {
-    const options = this.fieldAsSelectField.options;
+    const options = this.adapter.fieldAsSelectField.options;
     if (typeof options == 'function') {
       this.field().dependencies.forEach((dependency: string) => {
         this.form()

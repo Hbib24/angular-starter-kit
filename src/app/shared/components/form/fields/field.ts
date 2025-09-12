@@ -5,13 +5,15 @@ import { MultiSelectField } from './multi-select-field';
 import { NumericField } from './numeric-field';
 import { SelectField } from './select-field';
 import { TextField } from './text-field';
+import { CheckField } from './check-field';
 
 export type FormField =
   | NumericField
   | TextField
   | SelectField
   | MultiSelectField
-  | TemplateField;
+  | TemplateField
+  | CheckField;
 
 export interface FieldOptions {
   /**

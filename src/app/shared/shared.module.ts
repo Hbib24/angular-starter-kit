@@ -13,26 +13,44 @@ import {
   withInterceptorsFromDi,
 } from '@angular/common/http';
 import { AuthInterceptor } from '../core/interceptors/auth-interceptor';
-import { ListComponent } from './components/list/list.component';
 import { TableComponent } from './components/table/table.component';
 import { FilterComponent } from './components/filter/filter.component';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 
 @NgModule({
   declarations: [
     FormComponent,
     FormFieldComponent,
     CardComponent,
-    ListComponent,
     TableComponent,
     FilterComponent,
   ],
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    NzTableModule,
+    NzFormModule,
+    NzSelectModule,
+    NzInputModule,
+    NzButtonModule,
+    NzInputNumberModule,
+    NzDatePickerModule,
+    NzCheckboxModule,
+  ],
   providers: [
     provideHttpClient(withFetch(), withInterceptorsFromDi()),
     FormService,
     HttpService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ],
-  exports: [FormComponent, CardComponent],
+  exports: [FormComponent, CardComponent, TableComponent, FilterComponent],
 })
 export class SharedModule {}

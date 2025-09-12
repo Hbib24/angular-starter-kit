@@ -1,6 +1,6 @@
 import { Component, computed, inject, input, output } from '@angular/core';
 import { FormService } from '../../services/form.service';
-import { Form, FormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { FormField } from './fields/field';
 
 @Component({

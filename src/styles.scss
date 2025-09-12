@@ -1,9 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
 @use "tailwindcss";
+@source inline("col-span-{1..24..1}");
+
 // @use "assets/colors.scss";
 
 // @custom-variant dark (&:where(.dark, .dark *));
 
 input {
-    border : 1px solid black
+  border: 1px solid black;
 }

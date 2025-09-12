@@ -1,24 +1,41 @@
 <form
   (ngSubmit)="handleSubmit()"
   [formGroup]="_formGroup()"
-  class="form grid grid-cols-24 gap-3"
+  [nzLayout]="'vertical'"
+  class="form md:!grid flex flex-col grid-cols-24 gap-4"
   [id]="_formId()"
+  nz-form
 >
   @for (field of fields(); track field) {
   <div
-    [ngClass]="[
-      'form-item-' + field.name.toLowerCase(),
-      'col-span-' + field.colspan
-    ]"
+    [class]="getColSpan(field)"
+    [ngClass]="['form-item-' + field.name.toLowerCase()]"
   >
     <app-form-field [field]="field" [form]="_formGroup()" />
   </div>
-  }
-  <div class="col-span-24 form-footer-wrapper">
-    <button class="form-submit" type="submit">
-      <ng-content select="submit-content">
-        <span i18n="@@save">Enregistrer</span>
-      </ng-content>
-    </button>
+  } @if (showReset() || showSubmit()) {
+  <div class="col-span-24 flex justify-end form-footer-wrapper">
+    <nz-form-item>
+      <nz-form-control>
+        <div class="flex gap-2">
+          @if(showReset()) {
+          <button
+            nz-button
+            nzDanger
+            type="button"
+            [nzLoading]="loading()"
+            (click)="handleReset()"
+          >
+            Reset
+          </button>
+          } @if(showSubmit()) {
+          <button nz-button [nzLoading]="loading()" nzType="primary">
+            Valider
+          </button>
+          }
+        </div>
+      </nz-form-control>
+    </nz-form-item>
   </div>
+  }
 </form>
