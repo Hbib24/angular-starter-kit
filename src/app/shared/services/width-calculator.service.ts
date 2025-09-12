@@ -1,86 +1,102 @@
 import { FormatValueService } from './formateur-value.service';
+import { TemplateField } from '../components/form/fields/template-field';
 
 export class WidthCalculator {
-  // You must provide items and fixedHeight when calling getColumnWidth
+  /** Returns the column width as px string or null */
   static getColumnWidth(
     col: any,
     items: any[] = [],
     fixedHeight = true
   ): string | null {
-    if (col.width !== undefined && col.width !== null && col.width > 0) {
+    // If width is explicitly set, use it
+    if (col.width && col.width > 0) {
       return col.width + 'px';
     }
 
+    // If height is not fixed, we cannot calculate width
     if (!fixedHeight) {
       return null;
     }
 
-    return WidthCalculator.computeColumnWidthPx(col, items);
+    return this.computeColumnWidthPx(col, items);
   }
 
+  /** Safely get nested property value from item */
+  private static getValueByPath(item: any, path: string): string {
+    if (!item || !path) return '';
+    return path
+      .split('.')
+      .reduce((acc, k) => (acc?.[k] != null ? acc[k] : ''), item)
+      .toString()
+      .trim();
+  }
+
+  /** Compute column width based on label and content */
   private static computeColumnWidthPx(col: any, items: any[]): string {
     const label = col.label || '';
     const key = col.key;
     const type = col.type || '';
 
-    // Measure label width in px
-    const labelWidth = WidthCalculator.measureTextWidth(label.trim());
+    // Measure label width
+    const labelWidth = this.measureTextWidth(label);
 
-    // Find max content string in items for the key
-    const maxContent =
-      items && items.length > 0
-        ? items
-            .map((item) => {
-              let content = item[key] ? item[key].toString().trim() : '';
+    // Find max content string for visible items
+    let maxContent = '';
 
-              // Format values based on type
-              switch (type) {
-                case 'datetime':
-                  content =
-                    FormatValueService.formatDatetimeForDisplay(content);
-                  break;
-                case 'date':
-                  content = FormatValueService.formatDateForDisplay(content);
-                  break;
-                case 'time':
-                  content = FormatValueService.formatTimeForDisplay
-                    ? FormatValueService.formatTimeForDisplay(content)
-                    : content;
-                  break;
-                case 'currency':
-                case 'rate':
-                  content = FormatValueService.formatNumber(content);
-                  break;
-                default:
-                  break;
-              }
-              return content;
-            })
-            .reduce((a, b) => (a.length > b.length ? a : b), '')
-        : '';
+    if (items?.length) {
+      maxContent = items
+        .map((item) => {
+          let value = this.getValueByPath(item, key);
 
-    // Measure max content width in px
-    const contentWidth = WidthCalculator.measureTextWidth(maxContent);
+          // Format based on type
+          switch (type) {
+            case 'datetime':
+              value = FormatValueService.formatDatetimeForDisplay(value);
+              break;
+            case 'date':
+              value = FormatValueService.formatDateForDisplay(value);
+              break;
+            case 'time':
+              value = FormatValueService.formatTimeForDisplay
+                ? FormatValueService.formatTimeForDisplay(value)
+                : value;
+              break;
+            case 'currency':
+            case 'rate':
+              value = FormatValueService.formatNumber(value);
+              break;
+          }
 
-    // Add padding for safety
-    const paddingPx = 42;
+          return value;
+        })
+        .reduce((a, b) => (a.length > b.length ? a : b), '');
+    }
 
-    // Return the bigger width plus padding, as a string with px unit
+    // Measure max content width
+    const contentWidth = this.measureTextWidth(maxContent);
+
+    // Padding: cell + sorting icon + buffer
+    const paddingPx = 40;
+
+    // Return final width, enforce minimum width
     const widthPx = Math.max(labelWidth, contentWidth) + paddingPx;
-
-    return `${Math.max(widthPx, 100)}px`; // minimum 100px width
+    return `${Math.max(widthPx, 100)}px`;
   }
 
+  /** Use canvas to measure text width accurately */
   private static measureTextWidth(
     text: string,
-    font: string = '16px Arial'
+    font: string = '15px Arial'
   ): number {
-    const canvas = document.createElement('canvas');
+    const canvas =
+      this.canvas || (this.canvas = document.createElement('canvas'));
     const context = canvas.getContext('2d');
-    if (!context) return 100; // fallback width
+    if (!context) return 100;
 
     context.font = font;
     const metrics = context.measureText(text);
     return metrics.width;
   }
+
+  private static canvas: HTMLCanvasElement | null = null;
 }

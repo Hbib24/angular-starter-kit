@@ -1,4 +1,11 @@
-import { Component, input, OnInit, output, TemplateRef } from '@angular/core';
+import {
+  Component,
+  Input,
+  input,
+  OnInit,
+  output,
+  TemplateRef,
+} from '@angular/core';
 import { defaultGetter, Getter } from '../../helpers/getter';
 import { FormatValueService } from '../../services/formateur-value.service';
 import { WidthCalculator } from '../../services/width-calculator.service';
@@ -15,7 +22,7 @@ export interface Column<T = any> {
   label?: string;
   hidden?: boolean;
   fixed?: 'left' | 'right';
-  type?: 'date' | 'time' | 'datetime' | 'currency' | 'rate';
+  type?: 'date' | 'time' | 'datetime' | 'currency';
   format?: (value: any, row: T) => any;
 }
 
@@ -29,7 +36,7 @@ export interface Setting {
   footer: boolean;
   expandable: boolean;
   checkbox: boolean;
-  fixHeader: boolean;
+  fixHeader: string | null;
   noResult: boolean;
   ellipsis: boolean;
   simple: boolean;
@@ -56,17 +63,17 @@ export class TableComponent<T = any> implements OnInit {
   protected scrollX: string | null = null;
   protected scrollY: string | null = null;
 
-  protected settingValue: Setting = {
+  private _settingValue: Setting = {
     bordered: true,
     loading: false,
     pagination: true,
-    sizeChanger: true,
+    sizeChanger: false,
     title: false,
     header: true,
     footer: false,
     expandable: false,
     checkbox: false,
-    fixHeader: false,
+    fixHeader: null,
     noResult: false,
     ellipsis: false,
     simple: false,
@@ -77,6 +84,15 @@ export class TableComponent<T = any> implements OnInit {
     paginationType: 'default',
   };
 
+  @Input()
+  set settingValue(value: Partial<Setting> | undefined) {
+    // merge input with default values
+    this._settingValue = { ...this._settingValue, ...value };
+  }
+  get settingValue(): Setting {
+    return this._settingValue;
+  }
+
   columns = input.required<Column<T>[]>();
   getter = input<Getter<T>>(defaultGetter);
   pagination = input(true);
@@ -85,7 +101,9 @@ export class TableComponent<T = any> implements OnInit {
 
   ngOnInit(): void {
     this.scrollX = 'max-content';
-    this.scrollY = this.settingValue.fixHeader ? '100%' : null;
+    this.scrollY = this.settingValue.fixHeader
+      ? this.settingValue.fixHeader
+      : null;
     this.setItems();
   }
 
@@ -104,6 +122,7 @@ export class TableComponent<T = any> implements OnInit {
   }
 
   getTemplate(key: string): TemplateRef<{ $implicit: any }> | undefined {
+    console.log(this.itemTemplates());
     return this.itemTemplates()[key];
   }
 
@@ -115,10 +134,14 @@ export class TableComponent<T = any> implements OnInit {
   }
 
   getColumnWidth(col: Column<T>): string | null {
+    if (this.itemTemplates()[col.key]) {
+      console.log('has template', col.key);
+      return '150px';
+    }
     return WidthCalculator.getColumnWidth(
       col,
       this.items,
-      this.settingValue.fixHeader
+      this.settingValue.fixHeader !== null
     );
   }
 
@@ -135,8 +158,7 @@ export class TableComponent<T = any> implements OnInit {
           ? FormatValueService.formatTimeForDisplay(value)
           : value;
       case 'currency':
-      case 'rate':
-        return FormatValueService.formatNumber(value);
+
       default:
         return value;
     }

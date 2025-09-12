@@ -21,29 +21,27 @@
 >
   <thead>
     <tr>
-      @for (col of columns(); track col.key) {
+      @for (col of columns(); track col.key) { @if (!col.hidden) {
+
       <th
         [nzLeft]="col.fixed == 'left'"
         [nzRight]="col.fixed == 'right'"
         [nzWidth]="col.width ?? getColumnWidth(col)"
-        [hidden]="col.hidden"
       >
         {{ col.label }}
       </th>
-      }
+      } }
     </tr>
   </thead>
 
   <tbody>
     @for (row of items; let i = $index; track i) {
     <tr>
-      @for (col of columns(); track col.key) {
-      <td
-        [hidden]="col.hidden"
-        [nzLeft]="col.fixed == 'left'"
-        [nzRight]="col.fixed == 'right'"
-      >
+      @for (col of columns(); track col.key) { @if (!col.hidden) {
+
+      <td [nzLeft]="col.fixed == 'left'" [nzRight]="col.fixed == 'right'">
         @if (getTemplate(col.key)) {
+
         <ng-container
           [ngTemplateOutlet]="getTemplate(col.key)"
           [ngTemplateOutletContext]="{ $implicit: { item: row, index: i } }"
@@ -70,7 +68,7 @@
         </ng-container>
         }
       </td>
-      }
+      } }
     </tr>
     }
   </tbody>

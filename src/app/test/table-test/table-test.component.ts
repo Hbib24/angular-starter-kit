@@ -26,20 +26,32 @@ export class TableTestComponent {
     },
     {
       key: 'amount',
+
       hidden: true,
 
       label: 'amount',
     },
     {
       key: 'price',
-      fixed: 'left',
 
       label: 'price',
+    },
+    {
+      key: 'testObj.secondLevel.value',
+
+      label: 'testLevel2',
     },
     {
       key: 'counterValue',
       label: 'counterValue',
       fixed: 'right',
+    },
+    //created at
+    {
+      key: 'createdAt',
+      type: 'time',
+
+      label: 'createdAt',
     },
     {
       key: 'action',
@@ -48,9 +60,15 @@ export class TableTestComponent {
       label: 'action',
     },
   ];
-  data = Array.from({ length: 100 }).map((_, i) => ({
+  data = Array.from({ length: 1000 }).map((_, i) => ({
     id: i + 1,
+    createdAt: new Date().toISOString(),
     currency: 'usd',
+    testObj: {
+      secondLevel: {
+        value: 'test3Valeutest3Valeutest3Valeu',
+      },
+    },
     amount: Math.floor(Math.random() * 100010001000100010001000),
     price: Math.floor(Math.random() * 100010001000100010001000),
     counterValue: Math.floor(Math.random() * 10100010001000100000),
@@ -58,13 +76,13 @@ export class TableTestComponent {
 
   getFakeData: Getter = (params?: any) => {
     const page = params?.page || 1;
-    const pageSize = params?.pageSize || 10;
+    const pageSize = params?.pageSize || 100;
     const startIndex = (page - 1) * pageSize;
     const endIndex = startIndex + pageSize;
 
     return lastValueFrom(
       of({
-        count: this.data.length,
+        count: this.data.length + 30,
         data: this.data.slice(startIndex, endIndex),
       }).pipe(delay(0))
     );
