@@ -7,9 +7,10 @@ import { IndexComponent } from './index/index.component';
 import { RouterLink } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
+import { TableTestComponent } from './table-test/table-test.component';
 
 @NgModule({
-  declarations: [FormTestComponent, IndexComponent],
+  declarations: [FormTestComponent, IndexComponent, TableTestComponent],
   imports: [
     CommonModule,
     SharedModule,
