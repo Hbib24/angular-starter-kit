@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { IndexComponent } from './index/index.component';
 import { FormTestComponent } from './form-test/form-test.component';
+import { TableTestComponent } from './table-test/table-test.component';
 
 const routes: Routes = [
   {
@@ -14,6 +15,7 @@ const routes: Routes = [
         pathMatch: 'full',
       },
       { path: 'form', component: FormTestComponent },
+      { path: 'table', component: TableTestComponent },
     ],
   },
 ];
