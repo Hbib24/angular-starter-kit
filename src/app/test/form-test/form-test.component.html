@@ -1,5 +1,15 @@
-<app-form [fields]="fields()" (onSubmit)="submit($event)" />
+<app-form [fields]="fields()" [showReset]="true" (onSubmit)="submit($event)" />
 
-<ng-template #templateField>
-  <p>Template field</p>
+<ng-template #templateFieldLabel>
+  <div class="flex items-center">
+    <app-icon icon="arrow-right" /> This is a template Field
+  </div>
+</ng-template>
+
+<ng-template #templateFieldContent>
+  <div
+    class="h-20 bg-zinc-100 rounded-lg flex font-semibold items-center justify-center"
+  >
+    content
+  </div>
 </ng-template>

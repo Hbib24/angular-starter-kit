@@ -1,6 +1,6 @@
 import { Field, FieldOptions } from './field';
 
-type DateType = 'date' | 'datetime' | 'time' | 'month' | 'year';
+type DateType = 'date' | 'datetime' | 'month' | 'year';
 
 interface DateFieldOptions extends FieldOptions {
   max?: Date;

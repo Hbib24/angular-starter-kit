@@ -23,6 +23,9 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
+import { NzSwitchModule } from 'ng-zorro-antd/switch';
+import { IconComponent } from './components/icon/icon.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +34,7 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
     CardComponent,
     TableComponent,
     FilterComponent,
+    IconComponent,
   ],
   imports: [
     CommonModule,
@@ -44,6 +48,8 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
     NzInputNumberModule,
     NzDatePickerModule,
     NzCheckboxModule,
+    NzTimePickerModule,
+    NzSwitchModule,
   ],
   providers: [
     provideHttpClient(withFetch(), withInterceptorsFromDi()),
@@ -51,6 +57,12 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
     HttpService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ],
-  exports: [FormComponent, CardComponent, TableComponent, FilterComponent],
+  exports: [
+    FormComponent,
+    CardComponent,
+    TableComponent,
+    FilterComponent,
+    IconComponent,
+  ],
 })
 export class SharedModule {}

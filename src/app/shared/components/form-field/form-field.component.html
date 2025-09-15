@@ -2,16 +2,16 @@
 <div [formGroup]="form()">
   <nz-form-item>
     @if (!adapter.isCheckField){
-    <nz-form-label [nzRequired]="isRequired" [nzFor]="field().name">
-      {{ field().label }}
-    </nz-form-label>
+    <ng-container [ngTemplateOutlet]="fieldLabel" />
     }
     <nz-form-control
+      class="!col-span-2"
       [nzValidateStatus]="isDirty && !isValid ? 'error' : ''"
       [nzHasFeedback]="field().showFeedback"
       [nzErrorTip]="field().validationHint"
+      [nzExtra]="isDirty && !isValid ? undefined : field().hint"
     >
-      @if (adapter.isTextField) {
+      @if(!loading) { @if (adapter.isTextField) {
       <input
         nz-input
         [formControlName]="field().name"
@@ -32,16 +32,32 @@
       } @else if (adapter.isDateField) {
       <nz-date-picker
         class="!w-full"
-        [nzShowTime]="
-          adapter.fieldAsDateField.type === 'datetime' ||
-          adapter.fieldAsDateField.type === 'time'
+        [nzShowTime]="adapter.fieldAsDateField.type === 'datetime'"
+        [nzMode]="
+          adapter.fieldAsDateField.type === 'datetime'
+            ? 'date'
+            : adapter.fieldAsDateField.type
         "
-        [nzMode]="dateType"
-        [nzDisabledDate]="disabledDate"
         [formControlName]="field().name"
         [nzAllowClear]="true"
         [nzId]="field().name"
+        [nzFormat]="dateFormat"
       ></nz-date-picker>
+      } @else if(adapter.isTimeField) {
+      <nz-time-picker
+        [formControlName]="field().name"
+        [nzId]="field().name"
+        class="!w-full"
+        [nzAllowEmpty]="true"
+        [nzHideDisabledOptions]="true"
+      ></nz-time-picker>
+      }@else if(adapter.isAreaField) {
+      <textarea
+        [id]="field().name"
+        nz-input
+        [formControlName]="field().name"
+        [rows]="adapter.fieldAsAreaField.rows"
+      ></textarea>
       } @else if (adapter.isSelectField || adapter.isMultiSelectField) {
       <nz-select
         [formControlName]="field().name"
@@ -61,16 +77,41 @@
         </nz-option>
         } }
       </nz-select>
-      }@else if (adapter.isCheckField) {
+      }@else if (adapter.isCheckField) { @if(adapter.fieldAsCheckField.type ==
+      'default') {
       <label nz-checkbox [formControlName]="field().name" [nzId]="field().name">
-        {{ field().label }}
+        <ng-container [ngTemplateOutlet]="fieldLabel" />
       </label>
-      } @else if(adapter.isTemplateField) {
+      } @else {
+      <div class="flex gap-2">
+        <nz-switch
+          [formControlName]="field().name"
+          [nzId]="field().name"
+        ></nz-switch>
+        <ng-container [ngTemplateOutlet]="fieldLabel" />
+      </div>
+      } } @else if(adapter.isTemplateField) {
       <ng-container
         [ngTemplateOutlet]="adapter.fieldAsTemplateField.template"
-      ></ng-container>
+      />
+      } } @else {
+      <div class="h-[32px] w-full rounded-lg animate-pulse bg-zinc-200"></div>
       }
     </nz-form-control>
   </nz-form-item>
 </div>
 }
+
+<ng-template #fieldLabel>
+  <nz-form-label
+    class="font-semibold mt-0.5"
+    [nzRequired]="isRequired"
+    [nzFor]="field().name"
+  >
+    @if (adapter.templateLabel) {
+    <ng-container [ngTemplateOutlet]="adapter.templateLabel" />
+    }@else {
+    {{ field().label }}
+    }
+  </nz-form-label>
+</ng-template>

@@ -1,17 +1,30 @@
 <div class="p-4">
-  <div class="border border-zinc-400 p-4">
-    <ul nz-menu nzMode="horizontal">
-      <li nz-menu-item nzMatchRouter>
-        <a [routerLink]="['/', 'test', 'form']">Form</a>
-      </li>
-      <li nz-menu-item nzMatchRouter>
-        <a [routerLink]="['/', 'test', 'table']">Table</a>
-      </li>
-    </ul>
-  </div>
-  <div
-    class="border mt-4 border-zinc-400 p-4 flex gap-4 items-center justify-center"
-  >
+  <ul nz-menu nzMode="horizontal">
+    <li nz-menu-item nzMatchRouter>
+      <a [routerLink]="['/', 'test', 'form']">Form</a>
+    </li>
+    <li nz-menu-item nzMatchRouter>
+      <a [routerLink]="['/', 'test', 'table']">Table</a>
+    </li>
+  </ul>
+  <div class="mt-4 p-4">
     <router-outlet></router-outlet>
   </div>
+</div>
+
+<div class="fixed bottom-6 right-6 gap-4 flex items-center justify-center">
+  <a
+    href="https://ng.ant.design/components/overview/en"
+    target="_blank"
+    class="flex items-center justify-center !bg-red-500 w-12 h-12 rounded-full"
+  >
+    <app-icon class="*:text-white" icon="components" />
+  </a>
+  <a
+    href="https://tabler.io/icons"
+    target="_blank"
+    class="flex items-center justify-center !bg-blue-500 w-12 h-12 rounded-full"
+  >
+    <app-icon class="*:text-white" icon="brand-tabler" />
+  </a>
 </div>

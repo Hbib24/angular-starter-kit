@@ -6,6 +6,9 @@ import { NumericField } from './numeric-field';
 import { SelectField } from './select-field';
 import { TextField } from './text-field';
 import { CheckField } from './check-field';
+import { DateField } from './date-field';
+import { TimeField } from './time-field';
+import { AreaField } from './area-field';
 
 export type FormField =
   | NumericField
@@ -13,7 +16,10 @@ export type FormField =
   | SelectField
   | MultiSelectField
   | TemplateField
-  | CheckField;
+  | CheckField
+  | DateField
+  | TimeField
+  | AreaField;
 
 export interface FieldOptions {
   /**

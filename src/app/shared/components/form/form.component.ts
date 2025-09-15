@@ -2,6 +2,8 @@ import { Component, computed, inject, input, output } from '@angular/core';
 import { FormService } from '../../services/form.service';
 import { FormGroup } from '@angular/forms';
 import { FormField } from './fields/field';
+import { TemplateField } from './fields/template-field';
+import { AreaField } from './fields/area-field';
 
 @Component({
   selector: 'app-form',
@@ -44,6 +46,13 @@ export class FormComponent {
 
   getColSpan(field: FormField) {
     return `col-span-${field.colspan}`;
+  }
+
+  getHeight(field: FormField) {
+    if (field instanceof TemplateField || field instanceof AreaField) {
+      return '';
+    }
+    return 'h-[90px]';
   }
 
   handleSubmit() {

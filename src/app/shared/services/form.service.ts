@@ -19,7 +19,6 @@ export class FormService {
     Object.keys(flat).forEach((key) => {
       const value = flat[key];
       const parts = key.split(':'); // e.g. 'user:username' -> ['user', 'username']
-      console.log(parts);
       let current = result;
       for (let i = 0; i < parts.length; i++) {
         const part = parts[i];

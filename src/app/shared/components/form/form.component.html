@@ -2,13 +2,13 @@
   (ngSubmit)="handleSubmit()"
   [formGroup]="_formGroup()"
   [nzLayout]="'vertical'"
-  class="form md:!grid flex flex-col grid-cols-24 gap-4"
+  class="form md:!grid flex flex-col grid-cols-24 gap-x-4 gap-y-2"
   [id]="_formId()"
   nz-form
 >
   @for (field of fields(); track field) {
   <div
-    [class]="getColSpan(field)"
+    [class]="getColSpan(field) + ' ' + getHeight(field)"
     [ngClass]="['form-item-' + field.name.toLowerCase()]"
   >
     <app-form-field [field]="field" [form]="_formGroup()" />

@@ -1,3 +1,4 @@
+import { TemplateRef } from '@angular/core';
 import { CheckField } from '../components/form/fields/check-field';
 import { DateField } from '../components/form/fields/date-field';
 import { FormField } from '../components/form/fields/field';
@@ -6,9 +7,15 @@ import { NumericField } from '../components/form/fields/numeric-field';
 import { SelectField } from '../components/form/fields/select-field';
 import { TemplateField } from '../components/form/fields/template-field';
 import { TextField } from '../components/form/fields/text-field';
+import { TimeField } from '../components/form/fields/time-field';
+import { AreaField } from '../components/form/fields/area-field';
 
 export class FieldAdapter {
   constructor(protected readonly field: FormField) {}
+
+  get templateLabel() {
+    return this.field.label instanceof TemplateRef ? this.field.label : null;
+  }
 
   get isTextField() {
     return this.field instanceof TextField;
@@ -30,12 +37,24 @@ export class FieldAdapter {
     return this.field instanceof DateField;
   }
 
+  get isTimeField() {
+    return this.field instanceof TimeField;
+  }
+
   get isCheckField() {
     return this.field instanceof CheckField;
   }
 
   get isTemplateField() {
     return this.field instanceof TemplateField;
+  }
+
+  get isAreaField() {
+    return this.field instanceof AreaField;
+  }
+
+  get fieldAsAreaField() {
+    return this.field as AreaField;
   }
 
   get fieldAsSelectField() {
@@ -64,5 +83,9 @@ export class FieldAdapter {
 
   get fieldAsTemplateField() {
     return this.field as TemplateField;
+  }
+
+  get fieldAsTimeField() {
+    return this.field as TimeField;
   }
 }

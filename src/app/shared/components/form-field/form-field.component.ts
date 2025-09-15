@@ -17,10 +17,13 @@ export class FormFieldComponent {
 
   ngOnInit() {
     this.adapter = new FieldAdapter(this.field());
-    if (this.adapter.isSelectField) this.setSelectOptions();
+    if (this.adapter.isSelectField || this.adapter.isMultiSelectField) {
+      this.handleSelectOptions();
+    }
   }
 
   selectOptions: SelectOption[] = [];
+  loading = false;
   adapter!: FieldAdapter;
 
   get isRequired() {
@@ -43,28 +46,41 @@ export class FormFieldComponent {
     return this.field().isVisible(this.form());
   }
 
-  get dateType() {
-    return this.adapter.fieldAsDateField.type == 'time'
-      ? 'date'
-      : this.adapter.fieldAsDateField.type;
+  get dateFormat() {
+    switch (this.adapter.fieldAsDateField.type) {
+      case 'date':
+        return 'dd/MM/yyyy';
+      case 'datetime':
+        return 'dd/MM/yyyy HH:mm:ss';
+      default:
+        return '';
+    }
   }
 
-  disabledDate() {
-    return true;
-  }
+  disabledSeconds = () => {
+    return !this.adapter.fieldAsTimeField.showSeconds
+      ? new Array(60).fill(1).map((_, i) => i)
+      : [];
+  };
 
-  setSelectOptions() {
+  async handleSelectOptions() {
+    this.loading = true;
     const options = this.adapter.fieldAsSelectField.options;
     if (typeof options == 'function') {
+      this.selectOptions = await options(this.form());
       this.field().dependencies.forEach((dependency: string) => {
         this.form()
           .get(dependency)
           ?.valueChanges.subscribe(async () => {
+            this.loading = true;
             this.selectOptions = await options(this.form());
+            this.control()?.reset();
+            this.loading = false;
           });
       });
     } else {
       this.selectOptions = options;
     }
+    this.loading = false;
   }
 }

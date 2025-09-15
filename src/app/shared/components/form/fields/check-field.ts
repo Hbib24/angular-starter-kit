@@ -1,21 +1,16 @@
 import { FieldOptions, Field } from './field';
 
 interface CheckFieldOptions extends FieldOptions {
-  checkType?: CheckType;
-}
-
-enum CheckType {
-  DEFAULT = 'default',
-  SWITCH = 'switch',
+  type?: 'default' | 'switch';
 }
 
 export class CheckField extends Field<boolean> {
-  checkType: CheckType;
+  type: 'default' | 'switch';
 
   constructor(options: CheckFieldOptions) {
     super(options);
 
     this.value = options.value || false;
-    this.checkType = options.checkType || CheckType.DEFAULT;
+    this.type = options.type || 'default';
   }
 }
