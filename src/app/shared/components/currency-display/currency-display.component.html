@@ -6,5 +6,7 @@
     [alt]="isoCode()"
     [src]="ImagesConstants.FLAGS_PATH + isoCode().toUpperCase() + '.png'"
   />
-  <span *ngIf="displayText()">{{ isoCode().toUpperCase() }}</span>
+  @if (displayText()) {
+  <span>{{ isoCode().toUpperCase() }}</span>
+  }
 </div>
