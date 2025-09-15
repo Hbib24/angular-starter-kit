@@ -53,6 +53,12 @@ import { CurrencyDisplayComponent } from './components/currency-display/currency
     HttpService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ],
-  exports: [FormComponent, CardComponent, TableComponent, FilterComponent],
+  exports: [
+    FormComponent,
+    CardComponent,
+    TableComponent,
+    FilterComponent,
+    CurrencyDisplayComponent,
+  ],
 })
 export class SharedModule {}

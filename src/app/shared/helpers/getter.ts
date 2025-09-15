@@ -1,13 +1,11 @@
-export interface PaginatedResponse<T = any> {
+export interface PaginatedResponse {
   status?: number;
   count: number;
-  data: T[];
+  data: any[];
 }
 
-export type GetterResponse<T = any> =
-  | Promise<PaginatedResponse<T>>
-  | PaginatedResponse<T>;
+export type GetterResponse = Promise<PaginatedResponse> | PaginatedResponse;
 
-export type Getter<T = any> = (params?: any) => GetterResponse<T>;
+export type Getter = (params?: any) => GetterResponse;
 
-export const defaultGetter: Getter<any> = () => ({ count: 0, data: [] });
+export const defaultGetter: Getter = () => ({ count: 0, data: [] });

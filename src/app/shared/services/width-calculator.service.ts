@@ -1,4 +1,4 @@
-import { FormatValueService } from './formateur-value.service';
+import { FormatValueService } from './value-formater.service';
 import { TemplateField } from '../components/form/fields/template-field';
 
 export class WidthCalculator {

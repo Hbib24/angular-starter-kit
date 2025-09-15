@@ -1,5 +1,6 @@
 import {
   Component,
+  computed,
   Input,
   input,
   OnInit,
@@ -7,7 +8,7 @@ import {
   TemplateRef,
 } from '@angular/core';
 import { defaultGetter, Getter } from '../../helpers/getter';
-import { FormatValueService } from '../../services/formateur-value.service';
+import { FormatValueService } from '../../services/value-formater.service';
 import { WidthCalculator } from '../../services/width-calculator.service';
 import {
   NzTableLayout,
@@ -62,8 +63,7 @@ export class TableComponent<T = any> implements OnInit {
 
   protected scrollX: string | null = null;
   protected scrollY: string | null = null;
-
-  private _settingValue: Setting = {
+  private readonly defaultOptions: Setting = {
     bordered: true,
     loading: false,
     pagination: true,
@@ -83,27 +83,22 @@ export class TableComponent<T = any> implements OnInit {
     position: 'bottom',
     paginationType: 'default',
   };
+  options = input<Partial<Setting>>();
 
-  @Input()
-  set settingValue(value: Partial<Setting> | undefined) {
-    // merge input with default values
-    this._settingValue = { ...this._settingValue, ...value };
-  }
-  get settingValue(): Setting {
-    return this._settingValue;
-  }
+  _options = computed<Setting>(() => ({
+    ...this.defaultOptions,
+    ...(this.options() ?? {}),
+  }));
 
-  columns = input.required<Column<T>[]>();
-  getter = input<Getter<T>>(defaultGetter);
+  columns = input.required<Column<any>[]>();
+  getter = input<Getter>(defaultGetter);
   pagination = input(true);
   itemTemplates = input<{ [key: string]: TemplateRef<{ $implicit: any }> }>({});
   refreshEvent = output<{ [key: string]: any }>();
 
   ngOnInit(): void {
     this.scrollX = 'max-content';
-    this.scrollY = this.settingValue.fixHeader
-      ? this.settingValue.fixHeader
-      : null;
+    this.scrollY = this._options().fixHeader ? this._options().fixHeader : null;
     this.setItems();
   }
 
@@ -133,7 +128,7 @@ export class TableComponent<T = any> implements OnInit {
     return item[headerVal];
   }
 
-  getColumnWidth(col: Column<T>): string | null {
+  getColumnWidth(col: Column<any>): string | null {
     if (this.itemTemplates()[col.key]) {
       console.log('has template', col.key);
       return '150px';
@@ -141,11 +136,11 @@ export class TableComponent<T = any> implements OnInit {
     return WidthCalculator.getColumnWidth(
       col,
       this.items,
-      this.settingValue.fixHeader !== null
+      this._options().fixHeader !== null
     );
   }
 
-  formatValue(col: Column<T>, value: any): string {
+  formatValue(col: Column<any>, value: any): string {
     if (col.format) return col.format(value, {} as T);
     if (!value) return '';
     switch (col.type) {
