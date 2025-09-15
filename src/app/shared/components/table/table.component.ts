@@ -17,14 +17,14 @@ import {
   NzTableSize,
 } from 'ng-zorro-antd/table';
 
-export interface Column<T = any> {
+export interface Column {
   key: string;
   width?: string;
   label?: string;
   hidden?: boolean;
   fixed?: 'left' | 'right';
   type?: 'date' | 'time' | 'datetime' | 'currency';
-  format?: (value: any, row: T) => any;
+  format?: (value: any, row: any) => any;
 }
 
 export interface Setting {
@@ -54,8 +54,8 @@ export interface Setting {
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
 })
-export class TableComponent<T = any> implements OnInit {
-  protected items: T[] = [];
+export class TableComponent implements OnInit {
+  protected items: any[] = [];
   protected loading = false;
   protected error = false;
   protected totalSize = 0;
@@ -90,7 +90,7 @@ export class TableComponent<T = any> implements OnInit {
     ...(this.options() ?? {}),
   }));
 
-  columns = input.required<Column<any>[]>();
+  columns = input.required<Column[]>();
   getter = input<Getter>(defaultGetter);
   pagination = input(true);
   itemTemplates = input<{ [key: string]: TemplateRef<{ $implicit: any }> }>({});
@@ -128,7 +128,7 @@ export class TableComponent<T = any> implements OnInit {
     return item[headerVal];
   }
 
-  getColumnWidth(col: Column<any>): string | null {
+  getColumnWidth(col: Column): string | null {
     if (this.itemTemplates()[col.key]) {
       console.log('has template', col.key);
       return '150px';
@@ -140,8 +140,8 @@ export class TableComponent<T = any> implements OnInit {
     );
   }
 
-  formatValue(col: Column<any>, value: any): string {
-    if (col.format) return col.format(value, {} as T);
+  formatValue(col: Column, value: any): string {
+    if (col.format) return col.format(value, {});
     if (!value) return '';
     switch (col.type) {
       case 'datetime':
