@@ -1,33 +1,49 @@
 <nz-table
-  [nzFrontPagination]="false"
-  [nzLoading]="loading"
+  #table
   [nzData]="items"
+  [nzLoading]="loading"
+  [nzScroll]="{ x: scrollX, y: scrollY }"
+  [nzBordered]="_options().bordered"
+  [nzOuterBordered]="true"
+  [nzSimple]="_options().simple"
+  [nzTableLayout]="_options().tableLayout"
+  [nzPaginationType]="_options().paginationType"
+  [nzPaginationPosition]="_options().position"
+  [nzShowSizeChanger]="_options().sizeChanger"
+  [nzShowPagination]="_options().pagination"
+  [nzFooter]="_options().footer ? 'Here is Footer' : null"
+  [nzTitle]="_options().title ? 'Here is Title' : null"
+  [nzSize]="_options().size"
+  [nzFrontPagination]="false"
   [nzTotal]="totalSize"
   [nzPageIndex]="page"
   (nzPageIndexChange)="onPageChange($event)"
-  nzSize="small"
-  [nzScroll]="{ x: 'max-content' }"
-  nzBordered
-  nzOuterBordered
-  #table
 >
   <thead>
     <tr>
-      @for (col of columns(); track col) {
-      <th [nzCellControl]="col.key">
+      @for (col of columns(); track col.key) { @if (!col.hidden) {
+
+      <th
+        [nzLeft]="col.fixed == 'left'"
+        [nzRight]="col.fixed == 'right'"
+        [nzWidth]="col.width ?? getColumnWidth(col)"
+      >
         {{ col.label }}
       </th>
-      }
+      } }
     </tr>
   </thead>
+
   <tbody>
-    @for(row of table.data; let i = $index; track i) {
+    @for (row of items; let i = $index; track i) {
     <tr>
-      @for (col of columns(); track col) {
-      <td [nzCellControl]="col.key">
-        @if(itemTemplates()[col.key]) {
+      @for (col of columns(); track col.key) { @if (!col.hidden) {
+
+      <td [nzLeft]="col.fixed == 'left'" [nzRight]="col.fixed == 'right'">
+        @if (getTemplate(col.key)) {
+
         <ng-container
-          [ngTemplateOutlet]="itemTemplates()[col.key]"
+          [ngTemplateOutlet]="getTemplate(col.key)"
           [ngTemplateOutletContext]="{ $implicit: { item: row, index: i } }"
         >
         </ng-container>
@@ -35,17 +51,24 @@
         <ng-container>
           @if (col.type === 'date') {
           {{ getValue(col.key, row) | date : "dd/MM/yyyy" }}
-          } @else if(col.type === 'time') {
+          } @else if (col.type === 'time') {
           {{ getValue(col.key, row) | date : "HH:mm" }}
           } @else if (col.type === 'datetime') {
           {{ getValue(col.key, row) | date : "dd/MM/yyyy HH:mm" }}
+          } @else if(col.format ){
+          {{ col.format(getValue(col.key, row), row) }}
+          } @else if(col.type === 'currency') {
+          <app-currency-display
+            [isoCode]="getValue(col.key, row)"
+            [displayText]="true"
+          ></app-currency-display>
           } @else {
           {{ getValue(col.key, row) }}
           }
         </ng-container>
         }
       </td>
-      }
+      } }
     </tr>
     }
   </tbody>
