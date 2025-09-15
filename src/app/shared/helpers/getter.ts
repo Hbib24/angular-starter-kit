@@ -1,6 +1,7 @@
 export interface PaginatedResponse {
+  status?: number;
   count: number;
-  data: { [key: string]: any }[];
+  data: any[];
 }
 
 export type GetterResponse = Promise<PaginatedResponse> | PaginatedResponse;

@@ -1,0 +1,15 @@
+<div style="align-items: center">
+  <app-table
+    [itemTemplates]="{ action: actionTemplate }"
+    [columns]="columns"
+    [getter]="getFakeData"
+    [options]="{
+      bordered: true,
+      fixHeader: '450px',
+    }"
+  ></app-table>
+</div>
+
+<ng-template #actionTemplate let-data let-index>
+  <button nz-button nzType="link">Action {{ data.item.id }}</button>
+</ng-template>

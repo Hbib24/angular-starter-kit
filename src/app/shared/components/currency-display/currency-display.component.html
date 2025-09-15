@@ -1,0 +1,10 @@
+<div
+  class="flex flex-row align-items-center"
+  style="gap: 8px; padding-right: 8px"
+>
+  <img
+    [alt]="isoCode()"
+    [src]="ImagesConstants.FLAGS_PATH + isoCode().toUpperCase() + '.png'"
+  />
+  <span *ngIf="displayText()">{{ isoCode().toUpperCase() }}</span>
+</div>
