@@ -1,5 +1,5 @@
 import { TemplateRef } from '@angular/core';
-import { FormGroup, ValidatorFn } from '@angular/forms';
+import { FormControl, FormGroup, ValidatorFn } from '@angular/forms';
 import { TemplateField } from './template-field';
 import { MultiSelectField } from './multi-select-field';
 import { NumericField } from './numeric-field';
@@ -33,7 +33,7 @@ export interface FieldOptions {
   readonly?: boolean | ((formGroup: FormGroup) => boolean);
   visible?: boolean | ((formGroup: FormGroup) => boolean);
   hidden?: boolean | ((formGroup: FormGroup) => boolean);
-  validators?: ValidatorFn[];
+  validators?: ((formGroup: FormGroup) => ValidatorFn[]) | ValidatorFn[];
   validationHint?: string | TemplateRef<any>;
   hint?: string | TemplateRef<any>;
   /**
@@ -53,27 +53,27 @@ export interface FieldOptions {
    * Format the submitted value
    */
   formatValue?: (value: any) => any;
-  onValueChange?: (value: any) => void;
+  onValueChange?: (value: any, control: FormControl) => void;
 }
 
 export abstract class Field<T> {
-  readonly name: string;
-  readonly label?: string | TemplateRef<any>;
+  name: string;
+  label?: string | TemplateRef<any>;
   value: T;
-  readonly placeholder?: string;
-  readonly required: boolean | ((formGroup: FormGroup) => boolean);
-  readonly readonly: boolean | ((formGroup: FormGroup) => boolean);
-  readonly visible: boolean | ((formGroup: FormGroup) => boolean);
-  readonly hidden: boolean | ((formGroup: FormGroup) => boolean);
-  readonly validators: ValidatorFn[];
-  readonly validationHint?: string | TemplateRef<any>;
-  readonly dependencies: string[];
+  placeholder?: string;
+  required: boolean | ((formGroup: FormGroup) => boolean);
+  readonly: boolean | ((formGroup: FormGroup) => boolean);
+  visible: boolean | ((formGroup: FormGroup) => boolean);
+  hidden: boolean | ((formGroup: FormGroup) => boolean);
+  validators: ((formGroup: FormGroup) => ValidatorFn[]) | ValidatorFn[];
+  validationHint?: string | TemplateRef<any>;
+  dependencies: string[];
   showFeedback: boolean;
   hint?: string | TemplateRef<any>;
   colspan: number;
   isTemplate = false;
   formatValue?: (value: any) => any;
-  onValueChange?: (value: any) => void;
+  onValueChange?: (value: any, control: FormControl) => void;
 
   constructor(options: FieldOptions) {
     this.name = options.name;
@@ -83,7 +83,7 @@ export abstract class Field<T> {
       options.placeholder || (typeof this.label === 'string' ? this.label : '');
     this.required = options.required || false;
     this.readonly = options.readonly || false;
-    this.visible = options.visible || true;
+    this.visible = options.visible === undefined ? true : options.visible;
     this.hidden = options.hidden || false;
     this.validators = options.validators || [];
     this.validationHint = options.validationHint;

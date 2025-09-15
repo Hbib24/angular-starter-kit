@@ -12,13 +12,21 @@
       [nzExtra]="isDirty && !isValid ? undefined : field().hint"
     >
       @if(!loading) { @if (adapter.isTextField) {
-      <input
-        nz-input
-        [formControlName]="field().name"
-        [id]="field().name"
-        type="text"
-        [placeholder]="field().placeholder || field().label"
-      />
+      <nz-input-group [nzSuffix]="suffixTemplate">
+        <input
+          nz-input
+          [formControlName]="field().name"
+          [id]="field().name"
+          type="text"
+          [placeholder]="field().placeholder || field().label"
+          [nzAutocomplete]="auto"
+        />
+      </nz-input-group>
+      <nz-autocomplete
+        [nzDataSource]="autoCompleteOptions"
+        nzBackfill
+        #auto
+      ></nz-autocomplete>
       } @else if (adapter.isNumericField) {
       <nz-input-number
         class="!w-full"
@@ -53,9 +61,10 @@
       ></nz-time-picker>
       }@else if(adapter.isAreaField) {
       <textarea
-        [id]="field().name"
         nz-input
+        [id]="field().name"
         [formControlName]="field().name"
+        [placeholder]="field().placeholder || field().label"
         [rows]="adapter.fieldAsAreaField.rows"
       ></textarea>
       } @else if (adapter.isSelectField || adapter.isMultiSelectField) {
@@ -114,4 +123,10 @@
     {{ field().label }}
     }
   </nz-form-label>
+</ng-template>
+
+<ng-template #suffixTemplate>
+  @if (softLoading) {
+  <app-icon class="animate-spin *:text-primary" icon="loader-2" />
+  }
 </ng-template>

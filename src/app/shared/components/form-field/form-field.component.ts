@@ -20,10 +20,15 @@ export class FormFieldComponent {
     if (this.adapter.isSelectField || this.adapter.isMultiSelectField) {
       this.handleSelectOptions();
     }
+    if (this.adapter.isTextField) {
+      this.handleAutoCompleteOptions();
+    }
   }
 
   selectOptions: SelectOption[] = [];
+  autoCompleteOptions: string[] = [];
   loading = false;
+  softLoading = false;
   adapter!: FieldAdapter;
 
   get isRequired() {
@@ -82,5 +87,28 @@ export class FormFieldComponent {
       this.selectOptions = options;
     }
     this.loading = false;
+  }
+
+  async handleAutoCompleteOptions() {
+    this.softLoading = true;
+    const options = this.adapter.fieldAsTextField.autoCompleteOptions;
+    const value = this.control()?.value;
+    if (typeof options == 'function') {
+      this.autoCompleteOptions = await options(value, this.form());
+      const dependencies = [...this.field().dependencies, this.field().name];
+      dependencies.forEach((dependency: string) => {
+        this.form()
+          .get(dependency)
+          ?.valueChanges.subscribe(async () => {
+            this.softLoading = true;
+            const value = this.control()?.value;
+            this.autoCompleteOptions = await options(value, this.form());
+            this.softLoading = false;
+          });
+      });
+    } else {
+      this.autoCompleteOptions = options;
+    }
+    this.softLoading = false;
   }
 }

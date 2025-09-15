@@ -117,7 +117,6 @@ export class TableComponent implements OnInit {
   }
 
   getTemplate(key: string): TemplateRef<{ $implicit: any }> | undefined {
-    console.log(this.itemTemplates());
     return this.itemTemplates()[key];
   }
 
@@ -130,7 +129,6 @@ export class TableComponent implements OnInit {
 
   getColumnWidth(col: Column): string | null {
     if (this.itemTemplates()[col.key]) {
-      console.log('has template', col.key);
       return '150px';
     }
     return WidthCalculator.getColumnWidth(

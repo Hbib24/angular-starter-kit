@@ -12,7 +12,7 @@ import { TemplateField } from '../../shared/components/form/fields/template-fiel
 import { NumericField } from '../../shared/components/form/fields/numeric-field';
 import { TimeField } from '../../shared/components/form/fields/time-field';
 import { delay, lastValueFrom, of } from 'rxjs';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, Validators } from '@angular/forms';
 import { AreaField } from '../../shared/components/form/fields/area-field';
 
 @Component({
@@ -39,6 +39,17 @@ export class FormTestComponent {
       required: true,
       validationHint: 'This is a required field',
       hint: 'This is a hint',
+      onValueChange: (value) => {
+        console.log(value);
+      },
+      autoCompleteOptions: (value) =>
+        value
+          ? lastValueFrom(
+              of([value, value + value, value + value + value]).pipe(
+                delay(2000)
+              )
+            )
+          : [],
     }),
     new NumericField({
       name: 'numeric',

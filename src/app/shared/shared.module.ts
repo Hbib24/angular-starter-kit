@@ -27,6 +27,8 @@ import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { IconComponent } from './components/icon/icon.component';
 import { CurrencyDisplayComponent } from './components/currency-display/currency-display.component';
+import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 
 @NgModule({
   declarations: [
@@ -52,6 +54,8 @@ import { CurrencyDisplayComponent } from './components/currency-display/currency
     NzCheckboxModule,
     NzTimePickerModule,
     NzSwitchModule,
+    NzAutocompleteModule,
+    NzSpinModule,
   ],
   providers: [
     provideHttpClient(withFetch(), withInterceptorsFromDi()),
