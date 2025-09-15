@@ -27,6 +27,7 @@ import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { IconComponent } from './components/icon/icon.component';
 import { CurrencyDisplayComponent } from './components/currency-display/currency-display.component';
+import { ButtonsComponent } from './components/buttons/buttons.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { CurrencyDisplayComponent } from './components/currency-display/currency
     FilterComponent,
     IconComponent,
     CurrencyDisplayComponent,
+    ButtonsComponent,
   ],
   imports: [
     CommonModule,
@@ -66,6 +68,7 @@ import { CurrencyDisplayComponent } from './components/currency-display/currency
     FilterComponent,
     IconComponent,
     CurrencyDisplayComponent,
+    ButtonsComponent,
   ],
 })
 export class SharedModule {}
