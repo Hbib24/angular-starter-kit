@@ -27,6 +27,10 @@ import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { IconComponent } from './components/icon/icon.component';
 import { CurrencyDisplayComponent } from './components/currency-display/currency-display.component';
+import { NzDrawerModule } from 'ng-zorro-antd/drawer';
+import { DrawerService } from './services/drawer.service';
+import { ModalService } from './services/modal.service';
+import { NzModalModule } from 'ng-zorro-antd/modal';
 
 @NgModule({
   declarations: [
@@ -52,11 +56,15 @@ import { CurrencyDisplayComponent } from './components/currency-display/currency
     NzCheckboxModule,
     NzTimePickerModule,
     NzSwitchModule,
+    NzDrawerModule,
+    NzModalModule,
   ],
   providers: [
     provideHttpClient(withFetch(), withInterceptorsFromDi()),
     FormService,
     HttpService,
+    DrawerService,
+    ModalService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ],
   exports: [

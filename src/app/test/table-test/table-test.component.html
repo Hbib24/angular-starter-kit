@@ -1,4 +1,18 @@
 <div style="align-items: center">
+  <button nz-button nzType="primary" (click)="filter()">filter drawer</button>
+  <button
+    nz-button
+    (click)="filterTemplate(myTemplateRef, myFooterTemplateRef)"
+  >
+    filter template
+  </button>
+
+  <br />
+  <button nz-button (click)="openTemplateModal()">modal template</button>
+  <button nz-button (click)="openComponentModal()">modal component</button>
+  <button nz-button (click)="openInfoModal()">modal openInfoModal</button>
+
+  <br />
   <app-table
     [itemTemplates]="{ action: actionTemplate }"
     [columns]="columns"
@@ -11,5 +25,19 @@
 </div>
 
 <ng-template #actionTemplate let-data let-index>
-  <button nz-button nzType="link">Action {{ data.item.id }}</button>
+  <button
+    nz-button
+    nzType="link"
+    (click)="filterTemplate(data.item.id, data.item.id)"
+  >
+    Action {{ data.item.id }}
+  </button>
+</ng-template>
+
+<ng-template #myTemplateRef let-data let-drawerRef="drawerRef">
+  value: {{ data?.value }}
+  <button nz-button (click)="drawerRef?.close()">Close Drawer</button>
+</ng-template>
+<ng-template #myFooterTemplateRef>
+  <button nz-button nzType="primary" (click)="close()">Close Drawer</button>
 </ng-template>
