@@ -4,7 +4,6 @@ import { delay, lastValueFrom, of } from 'rxjs';
 import { Getter } from '../../shared/helpers/getter';
 import { DrawerService } from '../../shared/services/drawer.service';
 import { ModalService } from '../../shared/services/modal.service';
-import { TemplateField } from '../../shared/components/form/fields/template-field';
 import { TextField } from '../../shared/components/form/fields/text-field';
 
 @Component({
@@ -19,6 +18,9 @@ export class TableTestComponent {
   columns: Column[] = [
     {
       key: 'id',
+      sortDirections: ['ascend', 'descend', null],
+      sortFn: (a: any, b: any) => (a.id ?? 0) - (b.id ?? 0),
+
       fixed: 'left',
       format: (value: any) => `#${value}`,
 
@@ -27,6 +29,7 @@ export class TableTestComponent {
     {
       key: 'currency',
       type: 'currency',
+      sortFn: (a: any, b: any) => (a.amount ?? 0) - (b.amount ?? 0),
 
       label: 'currency',
     },
@@ -182,4 +185,11 @@ export class TableTestComponent {
       required: true,
     }),
   ];
+
+  acceptSelect(data: any) {
+    return data.id % 2 === 0;
+  }
+  onSelectedRowsChange(data: any) {
+    console.log('dataselected', data);
+  }
 }

@@ -20,9 +20,18 @@
     [itemTemplates]="{ action: actionTemplate }"
     [columns]="columns"
     [getter]="getFakeData"
+    (selectedRowsChange)="onSelectedRowsChange($event)"
     [options]="{
       bordered: true,
       fixHeader: '450px',
+      footer: myTemplateRef,
+      header: 'header title',
+          checkbox: true,
+          rowSelectable: acceptSelect,
+              
+
+          
+
     }"
   ></app-table>
 </div>

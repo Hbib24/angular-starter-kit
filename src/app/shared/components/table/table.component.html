@@ -1,6 +1,7 @@
 <nz-table
   #table
   [nzData]="items"
+  (nzCurrentPageDataChange)="(onCurrentPageDataChange)"
   [nzLoading]="loading"
   [nzScroll]="{ x: scrollX, y: scrollY }"
   [nzBordered]="_options().bordered"
@@ -11,8 +12,8 @@
   [nzPaginationPosition]="_options().position"
   [nzShowSizeChanger]="_options().sizeChanger"
   [nzShowPagination]="_options().pagination"
-  [nzFooter]="_options().footer ? 'Here is Footer' : null"
-  [nzTitle]="_options().title ? 'Here is Title' : null"
+  [nzFooter]="_options().footer ? _options().footer : null"
+  [nzTitle]="_options().header ? _options().header : null"
   [nzSize]="_options().size"
   [nzFrontPagination]="false"
   [nzTotal]="totalSize"
@@ -21,9 +22,20 @@
 >
   <thead>
     <tr>
-      @for (col of columns(); track col.key) { @if (!col.hidden) {
+      @if (_options().checkbox) {
+      <th
+        [nzWidth]="'60px'"
+        [nzChecked]="checked"
+        [nzIndeterminate]="indeterminate"
+        (nzCheckedChange)="onAllChecked($event)"
+      ></th>
+      } @for (col of columns(); track col.key) { @if (!col.hidden) {
 
       <th
+        [nzShowSort]="col.sortFn"
+        [nzSortOrder]="col.sortOrder || null"
+        [nzSortDirections]="col.sortDirections || []"
+        [nzSortFn]="col.sortFn ?? false"
         [nzLeft]="col.fixed == 'left'"
         [nzRight]="col.fixed == 'right'"
         [nzWidth]="col.width ?? getColumnWidth(col)"
@@ -35,9 +47,15 @@
   </thead>
 
   <tbody>
-    @for (row of items; let i = $index; track i) {
+    @for (row of table.data; let i = $index; track i) {
     <tr>
-      @for (col of columns(); track col.key) { @if (!col.hidden) {
+      @if (_options().checkbox) {
+      <td
+        [nzChecked]="setOfCheckedId.has(row.id)"
+        [nzDisabled]="!(_options().rowSelectable?.(row) ?? true)"
+        (nzCheckedChange)="onItemChecked(row.id, $event)"
+      ></td>
+      } @for (col of columns(); track col.key) { @if (!col.hidden) {
 
       <td [nzLeft]="col.fixed == 'left'" [nzRight]="col.fixed == 'right'">
         @if (getTemplate(col.key)) {
