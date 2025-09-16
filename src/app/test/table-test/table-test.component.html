@@ -1,17 +1,19 @@
 <div style="align-items: center">
-  <button nz-button nzType="primary" (click)="filter()">filter drawer</button>
-  <button
-    nz-button
-    (click)="filterTemplate(myTemplateRef, myFooterTemplateRef)"
-  >
-    filter template
-  </button>
+  <div class="gap-2 flex items-center pt-2">
+    <button nz-button nzType="primary" (click)="filter()">filter drawer</button>
+    <button
+      nz-button
+      (click)="filterTemplate(myTemplateRef, myFooterTemplateRef)"
+    >
+      filter template
+    </button>
+  </div>
 
-  <br />
-  <button nz-button (click)="openTemplateModal()">modal template</button>
-  <button nz-button (click)="openComponentModal()">modal component</button>
-  <button nz-button (click)="openInfoModal()">modal openInfoModal</button>
-
+  <div class="gap-2 flex items-center pt-2">
+    <button nz-button (click)="openTemplateModal()">modal template</button>
+    <button nz-button (click)="openComponentModal()">modal component</button>
+    <button nz-button (click)="openInfoModal()">modal openInfoModal</button>
+  </div>
   <br />
   <app-table
     [itemTemplates]="{ action: actionTemplate }"
@@ -40,4 +42,12 @@
 </ng-template>
 <ng-template #myFooterTemplateRef>
   <button nz-button nzType="primary" (click)="close()">Close Drawer</button>
+</ng-template>
+
+<ng-template #myTemplateRefModal let-data>
+  value: {{ data?.name }}
+  <button nz-button (click)="modalService.closeAll()">Close Template</button>
+</ng-template>
+<ng-template #myFooterTemplateModal let-data>
+  <button nz-button (click)="modalService.closeAll()">Close Template</button>
 </ng-template>

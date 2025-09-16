@@ -1,17 +1,15 @@
 import {
+  inject,
   Injectable,
   TemplateRef,
   Type,
   ViewContainerRef,
-  inject,
 } from '@angular/core';
-import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { NzModalRef, NzModalService, ModalOptions } from 'ng-zorro-antd/modal';
 
-/** Extend when you need more modal “categories” */
 export type ModalType = 'info' | 'success' | 'error' | 'warning';
 
-export interface BaseModalOptions<TData = any, TResult = any, TComp = any> {
+export interface BaseModalOptions<Data = any, Result = any, Comp = any> {
   id?: string;
   title: string | TemplateRef<{}>;
   content?: string | TemplateRef<{}>;
@@ -22,50 +20,55 @@ export interface BaseModalOptions<TData = any, TResult = any, TComp = any> {
   closable?: boolean;
   okText?: string;
   cancelText?: string;
-  data?: TData;
+  data?: Data;
+  canceledDisabled?: boolean;
+  okDisabled?: boolean;
+  draggable?: boolean;
+  okLoading?: boolean;
+
   type?: ModalType;
   onOk?: () => any | Promise<any>;
-  onCancel?: (ref: NzModalRef<TResult>) => any | Promise<any>;
+  onCancel?: (ref: NzModalRef<Result>) => any | Promise<any>;
 
   /** Called before closing; return false to prevent close */
-  beforeClose?: (ref: NzModalRef<TComp, TResult>) => boolean | Promise<boolean>;
+  beforeClose?: (ref: NzModalRef<Comp, Result>) => boolean | Promise<boolean>;
   /** Called after close */
-  afterClose?: (result: TResult | undefined) => void;
+  afterClose?: (result: Result | undefined) => void;
 }
 
-export interface TemplateModalOptions<TData = any, TResult = any>
-  extends BaseModalOptions<TData, TResult> {
+export interface TemplateModalOptions<Data = any, Result = any>
+  extends BaseModalOptions<Data, Result> {
   tplContent: TemplateRef<any>;
   tplFooter?: TemplateRef<any>;
 }
 
-export interface ComponentModalOptions<TComp, TData = any, TResult = any>
-  extends BaseModalOptions<TData, TResult> {
-  component: Type<TComp>;
+export interface ComponentModalOptions<Comp, Data = any, Result = any>
+  extends BaseModalOptions<Data, Result> {
+  component: Type<Comp>;
   viewContainerRef?: ViewContainerRef;
-  params?: TData;
+  params?: Data;
   footer?: string | TemplateRef<{}> | null;
   className?: string;
 }
 
-export interface ModalOnScreen<TResult = any> {
+export interface ModalOnScreen<Result = any> {
   id: string;
   type: ModalType;
-  ref: NzModalRef<TResult>;
+  ref: NzModalRef<Result>;
 }
 
 @Injectable({ providedIn: 'root' })
 export class ModalService {
   private modals = new Map<string, ModalOnScreen>();
 
-  constructor(private modal: NzModalService) {}
+  modal = inject(NzModalService);
 
   /** Generic template-based modal */
-  openTemplate<TData = any, TResult = any>(
-    opts: TemplateModalOptions<TData, TResult>
-  ): NzModalRef<TResult> {
+  openTemplate<Data = any, Result = any>(
+    opts: TemplateModalOptions<Data, Result>
+  ): NzModalRef<Result> {
     const id = opts.id ?? crypto.randomUUID();
-    const ref = this.modal.create<TResult>({
+    const ref = this.modal.create<Result>({
       nzTitle: opts.title,
       nzContent: opts.tplContent,
       nzFooter: opts.tplFooter,
@@ -77,6 +80,11 @@ export class ModalService {
       nzMaskClosable: opts.maskClosable ?? false,
       nzOkText: opts.okText ?? 'OK',
       nzCancelText: opts.cancelText ?? 'Annuler',
+      nzOkLoading: opts.okLoading,
+      nzCancelDisabled: opts.canceledDisabled,
+      nzOkDisabled: opts.okDisabled,
+      nzDraggable: opts.draggable,
+
       nzOnOk: opts.onOk,
       nzOnCancel: (): void | Promise<any> => {
         return opts.onCancel ? opts.onCancel(ref) : undefined;
@@ -88,11 +96,11 @@ export class ModalService {
   }
 
   /** Generic component-based modal */
-  openComponent<TComp, TData = any, TResult = any>(
-    opts: ComponentModalOptions<TComp, TData, TResult>
-  ): NzModalRef<TComp, TResult> {
+  openComponent<Comp, Data = any, Result = any>(
+    opts: ComponentModalOptions<Comp, Data, Result>
+  ): NzModalRef<Comp, Result> {
     const id = opts.id ?? crypto.randomUUID();
-    const ref = this.modal.create<TComp, TData, TResult>({
+    const ref = this.modal.create<Comp, Data, Result>({
       nzTitle: opts.title,
       nzContent: opts.component,
       nzViewContainerRef: opts.viewContainerRef,
@@ -106,6 +114,10 @@ export class ModalService {
       nzMaskClosable: opts.maskClosable ?? false,
       nzOkText: opts.okText ?? 'OK',
 
+      nzOkLoading: opts.okLoading,
+      nzCancelDisabled: opts.canceledDisabled,
+      nzOkDisabled: opts.okDisabled,
+      nzDraggable: opts.draggable,
       nzCancelText: opts.cancelText ?? 'Annuler',
     });
 
@@ -113,11 +125,11 @@ export class ModalService {
     return ref;
   }
   /** Promise-based simple modal for quick info/confirm */
-  async openModal<TResult = any>(
-    options: Partial<BaseModalOptions<any, TResult>> = {}
-  ): Promise<TResult | undefined> {
+  async openModal<Result = any>(
+    options: Partial<BaseModalOptions<any, Result>> = {}
+  ): Promise<Result | undefined> {
     return new Promise((resolve) => {
-      const ref = this.modal.create<TResult>({
+      const ref = this.modal.create<Result>({
         nzTitle: options.title,
         nzContent: options.content,
         nzCentered: options.centered ?? true,
@@ -125,18 +137,15 @@ export class ModalService {
         nzMaskClosable: options.maskClosable ?? false,
         nzOkText: options.okText ?? 'OK',
         nzCancelText: options.cancelText ?? 'Annuler',
+        nzOkLoading: options.okLoading,
+        nzCancelDisabled: options.canceledDisabled,
+        nzOkDisabled: options.okDisabled,
+        nzDraggable: options.draggable,
         nzOnOk: () => {
           options.onOk?.();
           resolve(undefined);
         },
-        /*************  ✨ Windsurf Command ⭐  *************/
-        /**
-         * Called when the modal is cancelled. The function takes
-         * the modal ref as a parameter and should return a promise.
-         * The promise is resolved with undefined when the modal is
-         * closed.
-         */
-        /*******  c30b5815-6fed-459e-b922-420b9ae4dc83  *******/
+
         nzOnCancel: () => {
           options.onCancel?.(ref);
           resolve(undefined);
@@ -146,11 +155,10 @@ export class ModalService {
       this.track(ref, options.id ?? crypto.randomUUID(), {
         ...options,
         title: options.title || 'Info',
-      } as BaseModalOptions<any, TResult>);
+      } as BaseModalOptions<any, Result>);
     });
   }
 
-  /** Close modal(s) by id or predicate */
   close(predicate?: string | ((m: ModalOnScreen) => boolean)): void {
     for (const [id, modal] of this.modals) {
       if (
@@ -176,19 +184,17 @@ export class ModalService {
     return this.modals.size > 0;
   }
 
-  /** Update modal options (title, width, etc.) at runtime */
   updateById(id: string, options: Partial<ModalOptions>): void {}
 
-  private track<TComp = any, TResult = any>(
-    ref: NzModalRef<TComp, TResult>,
+  private track<Comp = any, Result = any>(
+    ref: NzModalRef<Comp, Result>,
     id: string,
-    opts: BaseModalOptions<any, TResult>
+    opts: BaseModalOptions<any, Result>
   ) {
     this.modals.set(id, { id, type: opts.type ?? 'info', ref });
 
-    // Optional beforeClose guard
     const originalDestroy = ref.destroy.bind(ref);
-    ref.destroy = async (result?: TResult) => {
+    ref.destroy = async (result?: Result) => {
       if (opts.beforeClose) {
         const allow = await opts.beforeClose(ref);
         if (!allow) return; // stop closing
@@ -213,6 +219,11 @@ export class ModalService {
       nzMaskClosable: options.maskClosable ?? false,
       nzOkText: options.okText ?? 'OK',
       nzCancelText: options.cancelText ?? 'Annuler',
+      nzOkLoading: options.okLoading,
+      nzCancelDisabled: options.canceledDisabled,
+      nzOkDisabled: options.okDisabled,
+      nzDraggable: options.draggable,
+
       nzOnOk: () => options.onOk?.(),
     };
     let ref = null;
@@ -232,7 +243,6 @@ export class ModalService {
     return ref;
   }
 
-  /** Methods like NzModalService */
   info = (options: Partial<BaseModalOptions>) =>
     this.createModal({ ...options, type: 'info' });
   success = (options: Partial<BaseModalOptions>) =>

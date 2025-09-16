@@ -56,11 +56,6 @@ export class DrawerService {
       nzOnCancel: async () => (handleCancel ? await handleCancel() : undefined),
     });
 
-    drawerRef.afterOpen.subscribe(() => {
-      (drawerRef as any)._containerInstance!.nzContentParams.drawerRef =
-        drawerRef;
-    });
-
     this.trackDrawer(drawerRef, options.handleCancel);
     return drawerRef;
   }
@@ -97,7 +92,6 @@ export class DrawerService {
   async closeAll(result?: any): Promise<void> {
     for (const { ref, onCancel } of this.activeDrawers) {
       if (onCancel) {
-        // Wait if it returns a Promise
         await onCancel();
       }
       ref.close(result);

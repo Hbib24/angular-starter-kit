@@ -95,9 +95,12 @@ export class TableTestComponent {
 
   @ViewChild('myFooterTemplateRef', { static: true })
   myFooterTemplateRef!: TemplateRef<any>;
-  //actionTemplate
   @ViewChild('myTemplateRef', { static: true })
   myTemplateRef!: TemplateRef<any>;
+  @ViewChild('myTemplateRefModal', { static: true })
+  myTemplateRefModal!: TemplateRef<any>;
+  @ViewChild('myFooterTemplateModal', { static: true })
+  myFooterTemplateModal!: TemplateRef<any>;
 
   filter() {
     const ref = this.drawerService.openComponent({
@@ -132,6 +135,9 @@ export class TableTestComponent {
       title: 'Info Modal',
       content: 'This is an info modal',
       type: 'info',
+      okDisabled: true,
+      okLoading: true,
+
       onOk: () => console.log('OK clickedclickedclicked'),
       onCancel: () => console.log('Cancel clicked'),
     });
@@ -141,10 +147,10 @@ export class TableTestComponent {
     const modalRef = this.modalService.openTemplate({
       title: 'Template Modal',
       icon: 'info-circle',
-      tplContent: this.myFooterTemplateRef,
+      tplContent: this.myTemplateRefModal,
       width: '800px',
 
-      tplFooter: this.myFooterTemplateRef,
+      tplFooter: this.myFooterTemplateModal,
       data: { name: 'Hakim' },
       onOk: () => console.log('OK clicked on template'),
       onCancel: (ref) => ref.destroy(),
