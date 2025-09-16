@@ -8,15 +8,15 @@ import { Component } from '@angular/core';
 })
 export class IndexComponent {
   disabled = false;
-  constructor() {
-    this.normalFakeAction = this.normalFakeAction.bind(this);
-    this.fakeActionAsync = this.fakeActionAsync.bind(this);
-  }
+  loading = false;
+
   fakeActionAsync() {
+    this.loading = true;
     return new Promise<void>((resolve) => {
       console.log('Starting fake action...');
       setTimeout(() => {
         resolve();
+        this.loading = false;
       }, 2000);
     });
   }

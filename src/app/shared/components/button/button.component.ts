@@ -9,12 +9,12 @@ import {
 import { NzButtonShape, NzButtonType } from 'ng-zorro-antd/button';
 
 @Component({
-  selector: 'app-buttons',
+  selector: 'app-button',
   standalone: false,
-  templateUrl: './buttons.component.html',
-  styleUrl: './buttons.component.scss',
+  templateUrl: './button.component.html',
+  styleUrl: './button.component.scss',
 })
-export class ButtonsComponent implements OnInit {
+export class ButtonComponent implements OnInit {
   icon = input<string>();
   text = input<string>();
   color = input<
@@ -48,9 +48,7 @@ export class ButtonsComponent implements OnInit {
   _disabled = computed(() => this.disabled() || this._loading());
 
   type = input<NzButtonType>('default');
-  action = input<() => void | Promise<void>>();
-  actionEvent = output<void>();
-
+  onClick = output<void>();
   ngOnInit() {
     if (!this.icon() && !this.text()) {
       throw new Error(
@@ -58,30 +56,13 @@ export class ButtonsComponent implements OnInit {
       );
     }
   }
-  onClick(): void {
-    const fn = this.action();
-    if (!fn) {
-      this.actionEvent.emit();
-      return;
-    }
+  async _onClick(): Promise<void> {
+    if (this._disabled() || this._loading()) return;
 
     try {
-      const result = fn();
-      if (result instanceof Promise) {
-        // automatically handle internal loading
-        this.internalLoading.set(true);
-        result
-          .finally(() => this.internalLoading.set(false))
-          .then(() => this.actionEvent.emit())
-          .catch((err) => {
-            this.internalLoading.set(false);
-            console.error('AppButton action failed', err);
-          });
-      } else {
-        this.actionEvent.emit();
-      }
-    } catch (err) {
-      console.error('AppButton action threw an error', err);
+      this.onClick.emit();
+    } catch (error) {
+      console.error('AppButton error', error);
     }
   }
 }
