@@ -1,4 +1,11 @@
-import { Component, inject, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  inject,
+  TemplateRef,
+  viewChild,
+  ViewChild,
+} from '@angular/core';
 import { Column } from '../../shared/components/table/table.component';
 import { delay, lastValueFrom, of } from 'rxjs';
 import { Getter } from '../../shared/helpers/getter';
@@ -97,14 +104,10 @@ export class TableTestComponent {
     );
   };
 
-  @ViewChild('myFooterTemplateRef', { static: true })
-  myFooterTemplateRef!: TemplateRef<any>;
-  @ViewChild('myTemplateRef', { static: true })
-  myTemplateRef!: TemplateRef<any>;
-  @ViewChild('myTemplateRefModal', { static: true })
-  myTemplateRefModal!: TemplateRef<any>;
-  @ViewChild('myFooterTemplateModal', { static: true })
-  myFooterTemplateModal!: TemplateRef<any>;
+  myFooterTemplateRef = viewChild<TemplateRef<any>>('myFooterTemplateRef');
+  myTemplateRef = viewChild<TemplateRef<any>>('myTemplateRef');
+  myTemplateRefModal = viewChild<TemplateRef<any>>('myTemplateRefModal');
+  myFooterTemplateModal = viewChild<TemplateRef<any>>('myFooterTemplateModal');
 
   filter() {
     const ref = this.drawerService.openComponent({
@@ -112,7 +115,7 @@ export class TableTestComponent {
       component: TableTestComponent,
       extra: 'hakim',
       params: { value: 123 },
-      footer: this.myFooterTemplateRef,
+      footer: this.myFooterTemplateRef(),
       handleCancel: async () => {
         console.log('Cancel clicked. Drawer ref:', ref);
         await this.getFakeData();
@@ -124,14 +127,15 @@ export class TableTestComponent {
   }
 
   filterTemplate(tpl: any, footerTpl: any) {
-    this.myTemplateRef = tpl;
-    this.myFooterTemplateRef = footerTpl;
-    this.drawerService.openTemplate({
-      title: 'My Drawer template',
-      tplContent: this.myTemplateRef,
-      tplFooter: this.myFooterTemplateRef,
-      params: { value: 123 },
-    });
+    const myTemplateRef = this.myTemplateRef();
+    if (myTemplateRef) {
+      this.drawerService.openTemplate({
+        title: 'My Drawer template',
+        tplContent: myTemplateRef,
+        tplFooter: this.myFooterTemplateRef(),
+        params: { value: 123 },
+      });
+    }
   }
 
   async openInfoModal() {
@@ -148,17 +152,20 @@ export class TableTestComponent {
   }
 
   openTemplateModal() {
-    const modalRef = this.modalService.openTemplate({
-      title: 'Template Modal',
-      icon: 'info-circle',
-      tplContent: this.myTemplateRefModal,
-      width: '800px',
+    const myTemplateRefModal = this.myTemplateRefModal();
+    if (myTemplateRefModal) {
+      const modalRef = this.modalService.openTemplate({
+        title: 'Template Modal',
+        icon: 'info-circle',
+        tplContent: myTemplateRefModal,
+        width: '800px',
 
-      tplFooter: this.myFooterTemplateModal,
-      data: { name: 'Hakim' },
-      onOk: () => console.log('OK clicked on template'),
-      onCancel: (ref) => ref.destroy(),
-    });
+        tplFooter: this.myFooterTemplateModal(),
+        data: { name: 'Hakim' },
+        onOk: () => console.log('OK clicked on template'),
+        onCancel: (ref) => ref.destroy(),
+      });
+    }
   }
 
   openComponentModal() {
