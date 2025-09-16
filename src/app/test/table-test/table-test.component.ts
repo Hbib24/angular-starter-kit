@@ -69,7 +69,7 @@ export class TableTestComponent {
       label: 'action',
     },
   ];
-  data = Array.from({ length: 1000 }).map((_, i) => ({
+  data = Array.from({ length: 3 }).map((_, i) => ({
     id: i + 1,
     createdAt: new Date().toISOString(),
     currency: 'usd',

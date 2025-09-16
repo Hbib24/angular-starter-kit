@@ -129,6 +129,51 @@ export class TableComponent implements OnInit {
     }
   }
 
+  /*************  ✨ Windsurf Command ⭐  *************/
+  /**
+   * Returns the template associated with the given key.
+   * If no template is associated with the key, returns undefined.
+   * @param key The key to look up the template for.
+   * @returns The template associated with the given key, or undefined if no template exists for the key.
+   */
+  /*******  edb98c46-256d-46e4-857a-c2140f1d2b00  *******/ /** Add a new row to the table. */
+  addRow(newRow: any): void {
+    // if you need an id, generate it if not present
+    if (newRow.id == null) {
+      newRow.id = crypto.randomUUID();
+    }
+    this.items = [...this.items, newRow];
+
+    // keep pagination/selection consistent
+    this.totalSize = this.items.length;
+    this.refreshCheckedStatus();
+    this.emitSelectedRows();
+  }
+
+  deleteRow(value: string | number, key?: string): void {
+    key = key || 'id';
+
+    // Find matching rows before deleting (to know what was removed)
+    const removedRows = this.items.filter((row) => row[key] === value);
+
+    // Remove them from the data set
+    this.items = this.items.filter((row) => row[key] !== value);
+
+    // Remove from selected set if the key is 'id' or if you want to track by that key
+    if (key === 'id') {
+      this.setOfCheckedId.delete(value);
+    }
+
+    // Update counts and selection
+    this.totalSize = this.items.length;
+    this.refreshCheckedStatus();
+    this.emitSelectedRows();
+
+    // Optionally emit the removed rows so parent knows what was deleted
+    // (uncomment if you have an output)
+    // this.rowDeleted.emit({ key, value, removedRows });
+  }
+
   getTemplate(key: string): TemplateRef<{ $implicit: any }> | undefined {
     return this.itemTemplates()[key];
   }
