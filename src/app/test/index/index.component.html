@@ -11,7 +11,30 @@
     <router-outlet></router-outlet>
   </div>
 </div>
-
+<div class="gap-4 flex p-4">
+  <app-button
+    text="async action"
+    icon="plus"
+    color="success"
+    [loading]="this.loading"
+    (onClick)="fakeActionAsync()"
+  >
+  </app-button>
+  <app-button
+    text="normal action"
+    [disabled]="this.disabled"
+    color="primary"
+    (onClick)="normalFakeAction()"
+  >
+  </app-button>
+  <app-button
+    icon="plus"
+    color="custom-test"
+    type="dashed"
+    (onClick)="normalFakeAction()"
+  >
+  </app-button>
+</div>
 <div class="fixed bottom-6 right-6 gap-4 flex items-center justify-center">
   <a
     href="https://ng.ant.design/components/overview/en"

@@ -27,6 +27,7 @@ import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { IconComponent } from './components/icon/icon.component';
 import { CurrencyDisplayComponent } from './components/currency-display/currency-display.component';
+import { ButtonComponent } from './components/button/button.component';
 import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
@@ -40,6 +41,7 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
     FilterComponent,
     IconComponent,
     CurrencyDisplayComponent,
+    ButtonComponent,
   ],
   imports: [
     CommonModule,
@@ -72,6 +74,7 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
     FilterComponent,
     IconComponent,
     CurrencyDisplayComponent,
+    ButtonComponent,
   ],
 })
 export class SharedModule {}
