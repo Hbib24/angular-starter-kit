@@ -14,6 +14,7 @@ export class FormBuilder {
       if (!field.isTemplate) {
         this.handleRequired(formGroup, field);
         this.handleReadonly(formGroup, field);
+        this.handleValidators(formGroup, field);
       }
       this.handleVisibility(formGroup, field);
     });
@@ -34,22 +35,34 @@ export class FormBuilder {
   static createControl(field: FormField): FormControl {
     let control = new FormControl(field.value);
 
-    control = this.applyValidators(field, control);
-
+    const onValueChange = field.onValueChange;
+    if (onValueChange) {
+      control.valueChanges.subscribe(() => {
+        onValueChange(control.value, control);
+      });
+    }
     return control;
   }
 
-  private static applyValidators(
-    field: FormField,
-    control: FormControl
-  ): FormControl {
-    if (field.validators && field.validators.length > 0) {
-      field.validators.forEach((validator: ValidatorFn | ValidatorFn[]) => {
-        control.addValidators(validator);
+  private static handleValidators(
+    formGroup: FormGroup,
+    field: FormField
+  ): void {
+    const validators = field.validators;
+    if (Array.isArray(validators)) {
+      validators.forEach((validator: ValidatorFn | ValidatorFn[]) => {
+        formGroup.addValidators(validator);
+      });
+    } else {
+      formGroup.setValidators(validators(formGroup));
+
+      field.dependencies.forEach((dependency) => {
+        formGroup.get(dependency)?.valueChanges.subscribe(() => {
+          formGroup.setValidators(validators(formGroup));
+          formGroup.updateValueAndValidity({ emitEvent: false });
+        });
       });
     }
-
-    return control;
   }
 
   private static handleRequired(formGroup: FormGroup, field: FormField): void {

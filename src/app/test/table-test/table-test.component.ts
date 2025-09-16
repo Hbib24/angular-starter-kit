@@ -5,6 +5,7 @@ import { Getter } from '../../shared/helpers/getter';
 import { DrawerService } from '../../shared/services/drawer.service';
 import { ModalService } from '../../shared/services/modal.service';
 import { TemplateField } from '../../shared/components/form/fields/template-field';
+import { TextField } from '../../shared/components/form/fields/text-field';
 
 @Component({
   selector: 'app-table-test',
@@ -170,17 +171,15 @@ export class TableTestComponent {
     });
   }
 
-  // // Component modal
-  // this.modalService.openComponent({
-  //   title: 'User Form',
-  //   component: UserFormComponent,
-  //   params: { userId: 42 },
-  //   id: 'user-modal',
-  //   type: 'custom',
-  //   afterClose: (result) => console.log('User modal result:', result),
-  // });
-
-  // // Later
-  // this.modalService.updateById('user-modal', { nzWidth: 800 });
-  // this.modalService.close('user-modal');
+  filterFields = [
+    new TextField({
+      name: 'name',
+      label: 'name',
+    }),
+    new TextField({
+      name: 'test',
+      label: 'test',
+      required: true,
+    }),
+  ];
 }

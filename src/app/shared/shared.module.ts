@@ -31,6 +31,10 @@ import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 import { DrawerService } from './services/drawer.service';
 import { ModalService } from './services/modal.service';
 import { NzModalModule } from 'ng-zorro-antd/modal';
+import { ButtonComponent } from './components/button/button.component';
+import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzRadioModule } from 'ng-zorro-antd/radio';
 
 @NgModule({
   declarations: [
@@ -41,6 +45,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
     FilterComponent,
     IconComponent,
     CurrencyDisplayComponent,
+    ButtonComponent,
   ],
   imports: [
     CommonModule,
@@ -58,6 +63,9 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
     NzSwitchModule,
     NzDrawerModule,
     NzModalModule,
+    NzAutocompleteModule,
+    NzSpinModule,
+    NzRadioModule,
   ],
   providers: [
     provideHttpClient(withFetch(), withInterceptorsFromDi()),
@@ -74,6 +82,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
     FilterComponent,
     IconComponent,
     CurrencyDisplayComponent,
+    ButtonComponent,
   ],
 })
 export class SharedModule {}

@@ -1,0 +1,22 @@
+<button
+  [class]="_class()"
+  nz-button
+  nzBlock="true"
+  [nzDanger]="danger()"
+  [nzType]="type()"
+  [nzShape]="shape()"
+  [nzLoading]="_loading()"
+  nzSize="large"
+  (click)="_onClick()"
+  [disabled]="_disabled()"
+>
+  <div class="flex items-center justify-center gap-1">
+    @if (icon() && !_loading()) {
+    <app-icon [icon]="icon() ?? ''" [size]="iconSize()"></app-icon>
+
+    } @if (text() ) {
+    <span class="font-semibold"> {{ text() }}</span>
+
+    }
+  </div>
+</button>
