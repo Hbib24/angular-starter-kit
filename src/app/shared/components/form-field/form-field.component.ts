@@ -13,11 +13,18 @@ import { FieldAdapter } from '../../helpers/field-adapter';
 export class FormFieldComponent {
   readonly field = input.required<FormField>();
   readonly form = input.required<FormGroup>();
+  readonly highestLabelWidth = input<number>();
+  readonly inline = input<boolean>(false);
+
   readonly control = computed(() => this.form().get(this.field().name));
 
   ngOnInit() {
     this.adapter = new FieldAdapter(this.field());
-    if (this.adapter.isSelectField || this.adapter.isMultiSelectField) {
+    if (
+      this.adapter.isSelectField ||
+      this.adapter.isMultiSelectField ||
+      this.adapter.isRadioField
+    ) {
       this.handleSelectOptions();
     }
     if (this.adapter.isTextField) {

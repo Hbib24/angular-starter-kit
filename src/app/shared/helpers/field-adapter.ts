@@ -9,6 +9,7 @@ import { TemplateField } from '../components/form/fields/template-field';
 import { TextField } from '../components/form/fields/text-field';
 import { TimeField } from '../components/form/fields/time-field';
 import { AreaField } from '../components/form/fields/area-field';
+import { RadioField } from '../components/form/fields/radio-field';
 
 export class FieldAdapter {
   constructor(protected readonly field: FormField) {}
@@ -43,6 +44,10 @@ export class FieldAdapter {
 
   get isCheckField() {
     return this.field instanceof CheckField;
+  }
+
+  get isRadioField() {
+    return this.field instanceof RadioField;
   }
 
   get isTemplateField() {
@@ -87,5 +92,9 @@ export class FieldAdapter {
 
   get fieldAsTimeField() {
     return this.field as TimeField;
+  }
+
+  get fieldAsRadioField() {
+    return this.field as RadioField;
   }
 }

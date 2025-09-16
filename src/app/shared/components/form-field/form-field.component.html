@@ -1,7 +1,7 @@
 @if(isVisible) {
 <div [formGroup]="form()">
   <nz-form-item>
-    @if (!adapter.isCheckField){
+    @if (!adapter.isCheckField) {
     <ng-container [ngTemplateOutlet]="fieldLabel" />
     }
     <nz-form-control
@@ -86,7 +86,20 @@
         </nz-option>
         } }
       </nz-select>
-      }@else if (adapter.isCheckField) { @if(adapter.fieldAsCheckField.type ==
+      } @else if(adapter.isRadioField) {
+      <nz-radio-group
+        [nzButtonStyle]="'solid'"
+        [formControlName]="field().name"
+        [nzName]="field().name"
+      >
+        @for (item of selectOptions; track $index) { @if (typeof item.label
+        ==='string') { @if (adapter.fieldAsRadioField.type === 'default') {
+        <label nz-radio [nzValue]="item.value">{{ item.label }}</label>
+        } @else {
+        <label nz-radio-button [nzValue]="item.value">{{ item.label }}</label>
+        } } }
+      </nz-radio-group>
+      } @else if (adapter.isCheckField) { @if(adapter.fieldAsCheckField.type ==
       'default') {
       <label nz-checkbox [formControlName]="field().name" [nzId]="field().name">
         <ng-container [ngTemplateOutlet]="fieldLabel" />
@@ -113,9 +126,15 @@
 
 <ng-template #fieldLabel>
   <nz-form-label
-    class="font-semibold mt-0.5"
+    class="font-semibold mt-0.5 !text-left"
+    [style]="
+      inline() && highestLabelWidth()
+        ? { width: highestLabelWidth() + 'px' }
+        : {}
+    "
     [nzRequired]="isRequired"
     [nzFor]="field().name"
+    [nzNoColon]="adapter.isCheckField"
   >
     @if (adapter.templateLabel) {
     <ng-container [ngTemplateOutlet]="adapter.templateLabel" />

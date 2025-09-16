@@ -9,6 +9,7 @@ import { CheckField } from './check-field';
 import { DateField } from './date-field';
 import { TimeField } from './time-field';
 import { AreaField } from './area-field';
+import { RadioField } from './radio-field';
 
 export type FormField =
   | NumericField
@@ -19,7 +20,8 @@ export type FormField =
   | CheckField
   | DateField
   | TimeField
-  | AreaField;
+  | AreaField
+  | RadioField;
 
 export interface FieldOptions {
   /**

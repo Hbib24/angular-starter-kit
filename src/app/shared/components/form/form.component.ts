@@ -2,9 +2,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  ElementRef,
   inject,
   input,
   output,
+  viewChild,
 } from '@angular/core';
 import { FormService } from '../../services/form.service';
 import { FormGroup } from '@angular/forms';
@@ -26,6 +28,7 @@ export class FormComponent {
   formService = inject(FormService);
 
   name = input<string>('form');
+  inline = input<boolean>(false);
   fields = input.required<FormField[]>();
   loading = input<boolean>(false);
   showReset = input<boolean>(false);
@@ -45,10 +48,41 @@ export class FormComponent {
   onReset = output<any>();
   onValueChanges = output<any>();
 
+  formElementRef = viewChild<ElementRef>('form');
+  labelWidth?: number;
+
   ngOnInit(): void {
     this._formGroup().valueChanges.subscribe(() => {
       this.onValueChanges.emit(this._formGroup().value);
     });
+  }
+
+  ngAfterViewInit(): void {
+    if (this.inline()) {
+      this.labelWidth = this.getWidestLabelWidth(this.formElementRef()) || 0;
+      console.log(this.labelWidth);
+    }
+  }
+
+  private getWidestLabelWidth(
+    formRef?: ElementRef<HTMLFormElement | undefined>
+  ): number {
+    if (!formRef || !formRef.nativeElement) return 0;
+    const form = formRef.nativeElement;
+    const labels = Array.from(form.querySelectorAll('label'));
+
+    if (labels.length === 0) return 0;
+
+    let maxWidth = 0;
+
+    for (const label of labels) {
+      const width = label.offsetWidth;
+      if (width > maxWidth) {
+        maxWidth = width;
+      }
+    }
+
+    return maxWidth;
   }
 
   getColSpan(field: FormField) {

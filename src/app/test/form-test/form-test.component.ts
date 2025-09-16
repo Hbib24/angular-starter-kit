@@ -14,6 +14,7 @@ import { TimeField } from '../../shared/components/form/fields/time-field';
 import { delay, lastValueFrom, of } from 'rxjs';
 import { FormGroup, Validators } from '@angular/forms';
 import { AreaField } from '../../shared/components/form/fields/area-field';
+import { RadioField } from '../../shared/components/form/fields/radio-field';
 
 @Component({
   selector: 'app-form-test',
@@ -84,7 +85,43 @@ export class FormTestComponent {
         if (formGroup.get('select')?.value !== '2')
           return [{ label: 'Option 1', value: '1' }];
         return lastValueFrom(
-          of([{ label: 'Option 1', value: '1' }]).pipe(delay(2000))
+          of([
+            { label: 'Option 1', value: '1' },
+            { label: 'Option 2', value: '2' },
+            { label: 'Option 3', value: '3' },
+          ]).pipe(delay(2000))
+        );
+      },
+      colspan: 12,
+    }),
+    new RadioField({
+      name: 'radio',
+      label: 'Radio',
+      options: () => {
+        return lastValueFrom(
+          of([
+            { label: 'Option 1', value: '1' },
+            { label: 'Option 2', value: '2' },
+            { label: 'Option 3', value: '3' },
+          ]).pipe(delay(2000))
+        );
+      },
+      colspan: 12,
+    }),
+    new RadioField({
+      name: 'tabs',
+      label: 'Tabs',
+      type: 'tabs',
+      dependencies: ['radio'],
+      options: (formGroup: FormGroup) => {
+        if (formGroup.get('radio')?.value !== '2')
+          return [{ label: 'Option 1', value: '1' }];
+        return lastValueFrom(
+          of([
+            { label: 'Option 1', value: '1' },
+            { label: 'Option 2', value: '2' },
+            { label: 'Option 3', value: '3' },
+          ]).pipe(delay(2000))
         );
       },
       colspan: 12,

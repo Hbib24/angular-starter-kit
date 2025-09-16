@@ -10,7 +10,7 @@ import { FormBuilder } from '../../helpers/form-builder';
 })
 export class FilterComponent {
   fields = input.required<FormField[]>();
-  showReset = input<boolean>(false);
+  showReset = input<boolean>(true);
   showSubmit = input<boolean>(true);
   primaryFields = input<string[]>([]);
 
@@ -31,7 +31,7 @@ export class FilterComponent {
     values = { ...this.formGroup().value, ...values };
     this.formGroup().setValue(values, { emitEvent: false });
 
-    this.onValueChanges.emit(values);
+    this.onFilter.emit(values);
   }
 
   handleValueChanges(values: any) {
@@ -42,5 +42,9 @@ export class FilterComponent {
     this.primaryFormGroup().setValue(primaryValues, { emitEvent: false });
 
     this.onValueChanges.emit(values);
+  }
+
+  handleSubmit() {
+    this.onFilter.emit(this.formGroup().value);
   }
 }
