@@ -1,4 +1,5 @@
 <div style="align-items: center">
+  <app-filter [fields]="filterFields" [primaryFields]="['test']" />
   <app-table
     [itemTemplates]="{ action: actionTemplate }"
     [columns]="columns"

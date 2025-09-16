@@ -1,31 +1,28 @@
-import { TemplateRef } from '@angular/core';
-import { Field, FieldOptions } from './field';
 import { FormGroup } from '@angular/forms';
+import { FieldOptions, Field } from './field';
+import { SelectOption } from './select-field';
 
-export interface SelectOption {
-  value: string | number;
-  label: string | TemplateRef<any>;
-  disabled?: boolean;
-  hidden?: boolean;
-  visisble?: boolean;
-}
+export type RadioType = 'default' | 'tabs';
 
-interface SelectFieldOptions extends FieldOptions {
+interface RadioFieldOptions extends FieldOptions {
   options?:
     | SelectOption[]
     | ((formGroup: FormGroup) => Promise<SelectOption[]> | SelectOption[]);
   valueAsObject?: boolean;
+  type?: RadioType;
 }
 
-export class SelectField extends Field<string> {
+export class RadioField extends Field<string> {
   options:
     | SelectOption[]
     | ((formGroup: FormGroup) => Promise<SelectOption[]> | SelectOption[]);
   valueAsObject: boolean;
+  type: RadioType;
 
-  constructor(options: SelectFieldOptions) {
+  constructor(options: RadioFieldOptions) {
     super(options);
     this.options = options.options || [];
     this.valueAsObject = options.valueAsObject || false;
+    this.type = options.type || 'default';
   }
 }

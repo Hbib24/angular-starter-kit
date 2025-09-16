@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Column } from '../../shared/components/table/table.component';
 import { delay, lastValueFrom, of } from 'rxjs';
 import { Getter } from '../../shared/helpers/getter';
+import { TextField } from '../../shared/components/form/fields/text-field';
 
 @Component({
   selector: 'app-table-test',
@@ -87,4 +88,16 @@ export class TableTestComponent {
       }).pipe(delay(0))
     );
   };
+
+  filterFields = [
+    new TextField({
+      name: 'name',
+      label: 'name',
+    }),
+    new TextField({
+      name: 'test',
+      label: 'test',
+      required: true,
+    }),
+  ];
 }
