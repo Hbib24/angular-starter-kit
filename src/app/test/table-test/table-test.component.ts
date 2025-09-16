@@ -1,7 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, inject, TemplateRef, ViewChild } from '@angular/core';
 import { Column } from '../../shared/components/table/table.component';
 import { delay, lastValueFrom, of } from 'rxjs';
 import { Getter } from '../../shared/helpers/getter';
+import { DrawerService } from '../../shared/services/drawer.service';
+import { ModalService } from '../../shared/services/modal.service';
+import { TemplateField } from '../../shared/components/form/fields/template-field';
 import { TextField } from '../../shared/components/form/fields/text-field';
 
 @Component({
@@ -11,6 +14,8 @@ import { TextField } from '../../shared/components/form/fields/text-field';
   styleUrl: './table-test.component.scss',
 })
 export class TableTestComponent {
+  drawerService = inject(DrawerService);
+  modalService = inject(ModalService);
   columns: Column[] = [
     {
       key: 'id',
@@ -88,6 +93,83 @@ export class TableTestComponent {
       }).pipe(delay(0))
     );
   };
+
+  @ViewChild('myFooterTemplateRef', { static: true })
+  myFooterTemplateRef!: TemplateRef<any>;
+  @ViewChild('myTemplateRef', { static: true })
+  myTemplateRef!: TemplateRef<any>;
+  @ViewChild('myTemplateRefModal', { static: true })
+  myTemplateRefModal!: TemplateRef<any>;
+  @ViewChild('myFooterTemplateModal', { static: true })
+  myFooterTemplateModal!: TemplateRef<any>;
+
+  filter() {
+    const ref = this.drawerService.openComponent({
+      title: 'My Drawer component',
+      component: TableTestComponent,
+      extra: 'hakim',
+      params: { value: 123 },
+      footer: this.myFooterTemplateRef,
+      handleCancel: async () => {
+        console.log('Cancel clicked. Drawer ref:', ref);
+        await this.getFakeData();
+      },
+    });
+  }
+  close() {
+    this.drawerService.closeAll();
+  }
+
+  filterTemplate(tpl: any, footerTpl: any) {
+    this.myTemplateRef = tpl;
+    this.myFooterTemplateRef = footerTpl;
+    this.drawerService.openTemplate({
+      title: 'My Drawer template',
+      tplContent: this.myTemplateRef,
+      tplFooter: this.myFooterTemplateRef,
+      params: { value: 123 },
+    });
+  }
+
+  async openInfoModal() {
+    const result = await this.modalService.info({
+      title: 'Info Modal',
+      content: 'This is an info modal',
+      type: 'info',
+      okDisabled: true,
+      okLoading: true,
+
+      onOk: () => console.log('OK clickedclickedclicked'),
+      onCancel: () => console.log('Cancel clicked'),
+    });
+  }
+
+  openTemplateModal() {
+    const modalRef = this.modalService.openTemplate({
+      title: 'Template Modal',
+      icon: 'info-circle',
+      tplContent: this.myTemplateRefModal,
+      width: '800px',
+
+      tplFooter: this.myFooterTemplateModal,
+      data: { name: 'Hakim' },
+      onOk: () => console.log('OK clicked on template'),
+      onCancel: (ref) => ref.destroy(),
+    });
+  }
+
+  openComponentModal() {
+    const modalRef = this.modalService.openComponent<
+      TableTestComponent,
+      { name: string },
+      void
+    >({
+      title: 'User Modal',
+      component: TableTestComponent,
+      params: { name: 'Hakim' },
+      okText: 'Close',
+    });
+  }
 
   filterFields = [
     new TextField({

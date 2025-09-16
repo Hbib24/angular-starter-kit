@@ -27,6 +27,10 @@ import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { IconComponent } from './components/icon/icon.component';
 import { CurrencyDisplayComponent } from './components/currency-display/currency-display.component';
+import { NzDrawerModule } from 'ng-zorro-antd/drawer';
+import { DrawerService } from './services/drawer.service';
+import { ModalService } from './services/modal.service';
+import { NzModalModule } from 'ng-zorro-antd/modal';
 import { ButtonComponent } from './components/button/button.component';
 import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
@@ -57,6 +61,8 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
     NzCheckboxModule,
     NzTimePickerModule,
     NzSwitchModule,
+    NzDrawerModule,
+    NzModalModule,
     NzAutocompleteModule,
     NzSpinModule,
     NzRadioModule,
@@ -65,6 +71,8 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
     provideHttpClient(withFetch(), withInterceptorsFromDi()),
     FormService,
     HttpService,
+    DrawerService,
+    ModalService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ],
   exports: [

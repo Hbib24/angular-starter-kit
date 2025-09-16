@@ -125,6 +125,7 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
+
               {
                 "glob": "**/*",
                 "input": "public"
