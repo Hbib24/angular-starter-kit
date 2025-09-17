@@ -68,7 +68,7 @@ export abstract class Field<T> {
   visible: boolean | ((formGroup: FormGroup) => boolean);
   hidden: boolean | ((formGroup: FormGroup) => boolean);
   validators: ((formGroup: FormGroup) => ValidatorFn[]) | ValidatorFn[];
-  validationHint?: string | TemplateRef<any>;
+  validationHint?: string | string[] | TemplateRef<any>;
   dependencies: string[];
   showFeedback: boolean;
   hint?: string | TemplateRef<any>;

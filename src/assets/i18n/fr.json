@@ -1,0 +1,17 @@
+{
+  "id": "Id",
+  "currency": "Devise",
+  "date": "Date",
+  "time": "Heure",
+  "createdAt": "Date et heure",
+  "validators": {
+    "required": "Champ obligatoire",
+    "minlength": "Longueur minimale : {{requiredLength}}",
+    "maxlength": "Longueur maximale : {{requiredLength}}",
+    "min": "Valeur minimale : {{min}}",
+    "max": "Valeur maximale : {{max}}",
+    "minMax": "Valeur minimale : {{min}} | Valeur maximale : {{max}}",
+    "pattern": "Format incorrect",
+    "email": "Format incorrect"
+  }
+}

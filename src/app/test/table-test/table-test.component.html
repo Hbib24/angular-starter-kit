@@ -1,11 +1,14 @@
 <div style="align-items: center">
+  {{ "validators.required".tr() }}
+
+  <div class="gap-2 flex items-center pt-2">
   <!-- <div class="gap-2 flex items-center pt-2">
     <button nz-button nzType="primary" (click)="filter()">filter drawer</button>
     <button
       nz-button
       (click)="filterTemplate(myTemplateRef, myFooterTemplateRef)"
     >
-      filter template
+      {{ "filter template".tr({ value: "22x" }) }}
     </button>
   </div>
 
@@ -14,26 +17,42 @@
     <button nz-button (click)="openComponentModal()">modal component</button>
     <button nz-button (click)="openInfoModal()">modal openInfoModal</button>
   </div>
+  <br />
+  <app-filter [fields]="filterFields" [primaryFields]="['test']" />
+  <br />
+  <button (click)="tableRef.addRow({ id: 101, name: 'New Item' })">
+    Add Row
+  </button>
+
   <br /> -->
   <app-filter (onFilter)="onFilter($event)" [fields]="filterFields" />
   <app-table
+    #tableRef
     [itemTemplates]="{ action: actionTemplate }"
     [columns]="columns"
     [getter]="getFakeData"
+    (selectedRowsChange)="onSelectedRowsChange($event)"
     [options]="{
       bordered: true,
       fixHeader: '450px',
+      footer: myTemplateRef,
+      header: 'header title',
+          checkbox: true,
+          rowSelectable: acceptSelect,
+              
+
+          
+
     }"
   ></app-table>
 </div>
 
 <ng-template #actionTemplate let-data let-index>
-  <button
-    nz-button
-    nzType="link"
-    (click)="filterTemplate(data.item.id, data.item.id)"
-  >
-    Action {{ data.item.id }}
+  <button nz-button nzType="link" (click)="tableRef.deleteRow(data.item.id)">
+    Delete: {{ data.item.id }}
+  </button>
+  <button nz-button nzType="link" (click)="tableRef.addRow(data.item)">
+    ADD: {{ data.item.id }}
   </button>
 </ng-template>
 

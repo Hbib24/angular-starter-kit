@@ -1,5 +1,5 @@
-import { Component, computed, input } from '@angular/core';
-import { FormGroup, Validators } from '@angular/forms';
+import { Component, computed, input, TemplateRef } from '@angular/core';
+import { FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { SelectOption } from '../form/fields/select-field';
 import { FormField } from '../form/fields/field';
 import { FieldAdapter } from '../../helpers/field-adapter';
@@ -17,7 +17,10 @@ export class FormFieldComponent {
   readonly inline = input<boolean>(false);
 
   readonly control = computed(() => this.form().get(this.field().name));
-
+  getValidationHint(field: any): string {
+    const hint = field.validationHint;
+    return typeof hint === 'string' ? hint.tr() : '';
+  }
   ngOnInit() {
     this.adapter = new FieldAdapter(this.field());
     if (
@@ -40,6 +43,41 @@ export class FormFieldComponent {
 
   get isRequired() {
     return this.control()?.hasValidator(Validators.required);
+  }
+
+  get validatorHint(): string | TemplateRef<any> | '' {
+    const control = this.control();
+    if (!control || !control.errors) return '';
+
+    const hints = this.field().validationHint;
+
+    // If it's a single string, return it translated
+    if (typeof hints === 'string') return hints;
+
+    // If it's a TemplateRef, return as-is
+    if (hints instanceof TemplateRef) return hints;
+
+    // Otherwise, it's an array of strings
+    const validators = this.field().validators;
+    let validatorFns: ValidatorFn[] = [];
+
+    if (Array.isArray(validators)) {
+      validatorFns = validators;
+    } else if (typeof validators === 'function') {
+      validatorFns = validators(this.form()) || [];
+    }
+
+    // Find the first failing validator to get the corresponding hint
+    const errorKeys = Object.keys(control.errors);
+    for (let i = 0; i < validatorFns.length; i++) {
+      const result = validatorFns[i](control);
+      if (result && errorKeys.some((key) => result[key])) {
+        return (hints as string[])[i] || (hints as string[])[i] || '';
+      }
+    }
+
+    // Fallback to first hint if nothing matches
+    return (hints as string[])[0] || (hints as string[])[0] || '';
   }
 
   get isValid() {
