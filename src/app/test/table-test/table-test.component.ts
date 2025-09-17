@@ -6,6 +6,7 @@ import { DrawerService } from '../../shared/services/drawer.service';
 import { ModalService } from '../../shared/services/modal.service';
 import { TemplateField } from '../../shared/components/form/fields/template-field';
 import { TextField } from '../../shared/components/form/fields/text-field';
+import { Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-table-test',
@@ -144,6 +145,10 @@ export class TableTestComponent {
     });
   }
 
+  onFilter(values: any) {
+    // console.log(values);
+  }
+
   openTemplateModal() {
     const modalRef = this.modalService.openTemplate({
       title: 'Template Modal',
@@ -175,9 +180,11 @@ export class TableTestComponent {
     new TextField({
       name: 'name',
       label: 'name',
+      validators: [Validators.email],
     }),
     new TextField({
       name: 'test',
+      value: 'test',
       label: 'test',
       required: true,
     }),

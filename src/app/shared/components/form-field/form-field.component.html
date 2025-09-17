@@ -1,9 +1,14 @@
 @if(isVisible) {
 <div [formGroup]="form()">
   <nz-form-item>
-    @if (!adapter.isCheckField) {
-    <ng-container [ngTemplateOutlet]="fieldLabel" />
-    }
+    <div
+      [ngClass]="{
+        '!invisible': adapter.isCheckField
+      }"
+    >
+      <ng-container [ngTemplateOutlet]="labelTemplate" />
+    </div>
+
     <nz-form-control
       class="!col-span-2"
       [nzValidateStatus]="isDirty && !isValid ? 'error' : ''"
@@ -18,7 +23,7 @@
           [formControlName]="field().name"
           [id]="field().name"
           type="text"
-          [placeholder]="field().placeholder || field().label"
+          [placeholder]="field().placeholder"
           [nzAutocomplete]="auto"
         />
       </nz-input-group>
@@ -102,7 +107,7 @@
       } @else if (adapter.isCheckField) { @if(adapter.fieldAsCheckField.type ==
       'default') {
       <label nz-checkbox [formControlName]="field().name" [nzId]="field().name">
-        <ng-container [ngTemplateOutlet]="fieldLabel" />
+        <ng-container [ngTemplateOutlet]="labelTemplate" />
       </label>
       } @else {
       <div class="flex gap-2">
@@ -110,7 +115,7 @@
           [formControlName]="field().name"
           [nzId]="field().name"
         ></nz-switch>
-        <ng-container [ngTemplateOutlet]="fieldLabel" />
+        <ng-container [ngTemplateOutlet]="labelTemplate" />
       </div>
       } } @else if(adapter.isTemplateField) {
       <ng-container
@@ -124,7 +129,7 @@
 </div>
 }
 
-<ng-template #fieldLabel>
+<ng-template #labelTemplate>
   <nz-form-label
     class="font-semibold mt-0.5 !text-left"
     [style]="
@@ -132,9 +137,12 @@
         ? { width: highestLabelWidth() + 'px' }
         : {}
     "
+    [ngClass]="{
+      '!invisible': !field().label
+    }"
     [nzRequired]="isRequired"
     [nzFor]="field().name"
-    [nzNoColon]="adapter.isCheckField"
+    [nzNoColon]="adapter.isCheckField || !field().label"
   >
     @if (adapter.templateLabel) {
     <ng-container [ngTemplateOutlet]="adapter.templateLabel" />

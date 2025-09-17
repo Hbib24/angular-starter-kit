@@ -15,7 +15,11 @@
     <button nz-button (click)="openInfoModal()">modal openInfoModal</button>
   </div>
   <br />
-  <app-filter [fields]="filterFields" [primaryFields]="['test']" />
+  <app-filter
+    (onFilter)="onFilter($event)"
+    [fields]="filterFields"
+    [primaryFields]="['test']"
+  />
   <app-table
     [itemTemplates]="{ action: actionTemplate }"
     [columns]="columns"

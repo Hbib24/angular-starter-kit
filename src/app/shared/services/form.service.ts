@@ -52,7 +52,10 @@ export class FormService {
           value = String(value);
         }
       }
-      result[key] = value;
+
+      if (value !== '' && value !== null && value !== undefined) {
+        result[key] = value;
+      }
     });
 
     return result;
