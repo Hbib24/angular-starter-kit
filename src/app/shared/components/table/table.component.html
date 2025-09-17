@@ -28,7 +28,7 @@
         [nzRight]="col.fixed == 'right'"
         [nzWidth]="col.width ?? getColumnWidth(col)"
       >
-        {{ col.label }}
+        {{ (col.label ?? "").tr() }}
       </th>
       } }
     </tr>

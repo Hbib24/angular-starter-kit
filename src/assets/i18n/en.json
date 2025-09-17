@@ -1,7 +1,17 @@
 {
-  "locale": "en",
-  "translations": {
-    "defaultFieldValidationHint": "{{ field }} is invalid",
-    "save": "Save"
+  "id": "Id",
+  "currency": "Currency",
+  "date": "Date",
+  "time": "Time",
+  "createdAt": "Date and Time",
+  "validators": {
+    "required": "Required field",
+    "minlength": "Minimum length: {{requiredLength}}",
+    "maxlength": "Maximum length: {{requiredLength}}",
+    "min": "Minimum value: {{min}}",
+    "max": "Maximum value: {{max}}",
+    "minMax": "Minimum value: {{min}} | Maximum value: {{max}}",
+    "pattern": "Invalid format",
+    "email": "Invalid format"
   }
 }
