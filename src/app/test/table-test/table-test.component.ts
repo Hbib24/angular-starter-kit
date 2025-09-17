@@ -6,6 +6,7 @@ import { DrawerService } from '../../shared/services/drawer.service';
 import { ModalService } from '../../shared/services/modal.service';
 import { TemplateField } from '../../shared/components/form/fields/template-field';
 import { TextField } from '../../shared/components/form/fields/text-field';
+import { NumericField } from '../../shared/components/form/fields/numeric-field';
 
 @Component({
   selector: 'app-table-test',
@@ -178,7 +179,17 @@ export class TableTestComponent {
     }),
     new TextField({
       name: 'test',
+      validationHint: 'validators.required',
       label: 'test',
+      required: true,
+    }),
+    new NumericField({
+      name: 'max10',
+      validationHint: 'validators.minMax'.tr({ min: 10, max: 100 }),
+      min: 10,
+      max: 100,
+
+      label: 'number',
       required: true,
     }),
   ];

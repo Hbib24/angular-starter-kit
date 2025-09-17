@@ -17,7 +17,10 @@ export class FormFieldComponent {
   readonly inline = input<boolean>(false);
 
   readonly control = computed(() => this.form().get(this.field().name));
-
+  getValidationHint(field: any): string {
+    const hint = field.validationHint;
+    return typeof hint === 'string' ? hint.tr() : '';
+  }
   ngOnInit() {
     this.adapter = new FieldAdapter(this.field());
     if (

@@ -33,7 +33,7 @@ export class WidthCalculator {
 
   /** Compute column width based on label and content */
   private static computeColumnWidthPx(col: any, items: any[]): string {
-    const label = col.label || '';
+    const label = col.label.tr() || '';
     const key = col.key;
     const type = col.type || '';
 
