@@ -1,10 +1,10 @@
 import {
   Component,
+  OnInit,
   ElementRef,
   inject,
   TemplateRef,
   viewChild,
-  ViewChild,
 } from '@angular/core';
 import { Column } from '../../shared/components/table/table.component';
 import { delay, lastValueFrom, of } from 'rxjs';
@@ -14,6 +14,7 @@ import { ModalService } from '../../shared/services/modal.service';
 import { TextField } from '../../shared/components/form/fields/text-field';
 import { NumericField } from '../../shared/components/form/fields/numeric-field';
 import { Validators } from '@angular/forms';
+import { FormField } from '../../shared/components/form/fields/field';
 
 @Component({
   selector: 'app-table-test',
@@ -21,7 +22,24 @@ import { Validators } from '@angular/forms';
   templateUrl: './table-test.component.html',
   styleUrl: './table-test.component.scss',
 })
-export class TableTestComponent {
+export class TableTestComponent implements OnInit {
+  filterFields: FormField[] = [];
+  ngOnInit(): void {
+    this.filterFields = [
+      new TextField({
+        name: 'name',
+        label: 'name',
+        validators: [Validators.required, Validators.email],
+        validationHint: this.myTemplateRefModal,
+      }),
+      new TextField({
+        name: 'test',
+        value: 'test',
+        label: 'test',
+        required: true,
+      }),
+    ];
+  }
   drawerService = inject(DrawerService);
   modalService = inject(ModalService);
   columns: Column[] = [
@@ -186,30 +204,6 @@ export class TableTestComponent {
       okText: 'Close',
     });
   }
-
-  filterFields = [
-    new TextField({
-      name: 'name',
-      label: 'name',
-      validators: [Validators.email],
-    }),
-    new TextField({
-      name: 'test',
-      validationHint: 'validators.required',
-      value: 'test',
-      label: 'test',
-      required: true,
-    }),
-    new NumericField({
-      name: 'max10',
-      validationHint: 'validators.minMax'.tr({ min: 10, max: 100 }),
-      min: 10,
-      max: 100,
-
-      label: 'number',
-      required: true,
-    }),
-  ];
 
   acceptSelect(data: any) {
     return data.id % 2 === 0;
