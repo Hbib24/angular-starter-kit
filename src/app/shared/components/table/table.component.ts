@@ -199,11 +199,6 @@ export class TableComponent implements OnInit {
     this.setItems({ page });
   }
 
-  onCurrentPageDataChange(list: any[]): void {
-    this.items = list;
-    this.refreshCheckedStatus();
-  }
-
   updateCheckedSet(id: string | number, checked: boolean): void {
     if (checked) this.setOfCheckedId.add(id);
     else this.setOfCheckedId.delete(id);
