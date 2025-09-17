@@ -12,6 +12,8 @@ import { Getter } from '../../shared/helpers/getter';
 import { DrawerService } from '../../shared/services/drawer.service';
 import { ModalService } from '../../shared/services/modal.service';
 import { TextField } from '../../shared/components/form/fields/text-field';
+import { NumericField } from '../../shared/components/form/fields/numeric-field';
+import { Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-table-test',
@@ -151,6 +153,10 @@ export class TableTestComponent {
     });
   }
 
+  onFilter(values: any) {
+    // console.log(values);
+  }
+
   openTemplateModal() {
     const myTemplateRefModal = this.myTemplateRefModal();
     if (myTemplateRefModal) {
@@ -185,10 +191,22 @@ export class TableTestComponent {
     new TextField({
       name: 'name',
       label: 'name',
+      validators: [Validators.email],
     }),
     new TextField({
       name: 'test',
+      validationHint: 'validators.required',
+      value: 'test',
       label: 'test',
+      required: true,
+    }),
+    new NumericField({
+      name: 'max10',
+      validationHint: 'validators.minMax'.tr({ min: 10, max: 100 }),
+      min: 10,
+      max: 100,
+
+      label: 'number',
       required: true,
     }),
   ];

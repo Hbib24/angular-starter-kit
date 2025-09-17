@@ -1,5 +1,4 @@
 import {
-  ChangeDetectionStrategy,
   Component,
   computed,
   ElementRef,
@@ -33,6 +32,7 @@ export class FormComponent {
   loading = input<boolean>(false);
   showReset = input<boolean>(false);
   showSubmit = input<boolean>(true);
+  submitOnChange = input<boolean>(false);
   formGroup = input<FormGroup>();
 
   _defaultValues = computed(() =>
@@ -53,7 +53,18 @@ export class FormComponent {
 
   ngOnInit(): void {
     this._formGroup().valueChanges.subscribe(() => {
-      this.onValueChanges.emit(this._formGroup().value);
+      if (this.submitOnChange()) {
+        this.handleSubmit();
+      } else {
+        const values = this._formGroup().value;
+        const formattedValues = this.formService.formatValues(
+          values,
+          this.fields()
+        );
+        const formattedStructure =
+          this.formService.handleNestedFields(formattedValues);
+        this.onValueChanges.emit(formattedStructure);
+      }
     });
   }
 
@@ -93,19 +104,24 @@ export class FormComponent {
     if (field instanceof TemplateField || field instanceof AreaField) {
       return '';
     }
-    return 'h-[90px]';
+    return 'max-h-[90px]';
+  }
+
+  formatValues(values: any) {
+    const formattedValues = this.formService.formatValues(
+      values,
+      this.fields()
+    );
+    const formattedStructure =
+      this.formService.handleNestedFields(formattedValues);
+
+    return formattedStructure;
   }
 
   handleSubmit() {
     if (this._formGroup().valid) {
       const values = this._formGroup().value;
-      const formattedValues = this.formService.formatValues(
-        values,
-        this.fields()
-      );
-      const formattedStructure =
-        this.formService.handleNestedFields(formattedValues);
-      this.onSubmit.emit(formattedStructure);
+      this.onSubmit.emit(this.formatValues(values));
     } else {
       this._formGroup().markAllAsDirty();
     }
@@ -113,13 +129,9 @@ export class FormComponent {
 
   handleReset() {
     const defaultValues = this._defaultValues();
-    const formattedValues = this.formService.formatValues(
-      defaultValues,
-      this.fields()
-    );
-    const formattedStructure =
-      this.formService.handleNestedFields(formattedValues);
-    this._formGroup().reset(formattedStructure);
-    this.onReset.emit(formattedStructure);
+    const formattedValues = this.formatValues(defaultValues);
+
+    this._formGroup().reset(formattedValues);
+    this.onReset.emit(formattedValues);
   }
 }

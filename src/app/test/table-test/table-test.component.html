@@ -1,11 +1,14 @@
 <div style="align-items: center">
+  {{ "validators.required".tr() }}
+
   <div class="gap-2 flex items-center pt-2">
+  <!-- <div class="gap-2 flex items-center pt-2">
     <button nz-button nzType="primary" (click)="filter()">filter drawer</button>
     <button
       nz-button
       (click)="filterTemplate(myTemplateRef, myFooterTemplateRef)"
     >
-      filter template
+      {{ "filter template".tr({ value: "22x" }) }}
     </button>
   </div>
 
@@ -21,6 +24,8 @@
     Add Row
   </button>
 
+  <br /> -->
+  <app-filter (onFilter)="onFilter($event)" [fields]="filterFields" />
   <app-table
     #tableRef
     [itemTemplates]="{ action: actionTemplate }"

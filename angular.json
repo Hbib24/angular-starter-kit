@@ -56,6 +56,7 @@
             "assets": [
               "src/favicon.ico",
               "src/assets/images",
+              "src/assets/i18n",
               {
                 "glob": "**/*",
                 "input": "public"

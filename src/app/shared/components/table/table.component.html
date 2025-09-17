@@ -16,7 +16,7 @@
   [nzSize]="_options().size"
   [nzFrontPagination]="false"
   [nzTotal]="totalSize"
-  [nzPageIndex]="page"
+  [nzPageIndex]="page()"
   (nzPageIndexChange)="onPageChange($event)"
 >
   <thead>
@@ -39,7 +39,7 @@
         [nzRight]="col.fixed == 'right'"
         [nzWidth]="col.width ?? getColumnWidth(col)"
       >
-        {{ col.label }}
+        {{ (col.label ?? "").tr() }}
       </th>
       } }
     </tr>
