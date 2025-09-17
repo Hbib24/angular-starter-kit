@@ -86,7 +86,7 @@ export class FilterComponent {
       this.drawerRef = this.drawerService.openTemplate({
         title: this.title,
         tplContent: template,
-        width: '350px',
+        width: '420px',
       });
     }
   }

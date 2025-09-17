@@ -1,5 +1,5 @@
 <div style="align-items: center">
-  <div class="gap-2 flex items-center pt-2">
+  <!-- <div class="gap-2 flex items-center pt-2">
     <button nz-button nzType="primary" (click)="filter()">filter drawer</button>
     <button
       nz-button
@@ -14,12 +14,8 @@
     <button nz-button (click)="openComponentModal()">modal component</button>
     <button nz-button (click)="openInfoModal()">modal openInfoModal</button>
   </div>
-  <br />
-  <app-filter
-    (onFilter)="onFilter($event)"
-    [fields]="filterFields"
-    [primaryFields]="['test']"
-  />
+  <br /> -->
+  <app-filter (onFilter)="onFilter($event)" [fields]="filterFields" />
   <app-table
     [itemTemplates]="{ action: actionTemplate }"
     [columns]="columns"

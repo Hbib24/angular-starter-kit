@@ -5,6 +5,7 @@ import {
   input,
   OnInit,
   output,
+  signal,
   TemplateRef,
 } from '@angular/core';
 import { defaultGetter, Getter } from '../../helpers/getter';
@@ -59,7 +60,7 @@ export class TableComponent implements OnInit {
   protected loading = false;
   protected error = false;
   protected totalSize = 0;
-  protected page = 1;
+  protected page = signal(1);
 
   protected scrollX: string | null = null;
   protected scrollY: string | null = null;
@@ -89,8 +90,12 @@ export class TableComponent implements OnInit {
     ...this.defaultOptions,
     ...(this.options() ?? {}),
   }));
+  params = computed(() => {
+    return { ...this.filters(), page: this.page() };
+  });
 
   columns = input.required<Column[]>();
+  filters = input<{ [key: string]: any }>({});
   getter = input<Getter>(defaultGetter);
   pagination = input(true);
   itemTemplates = input<{ [key: string]: TemplateRef<{ $implicit: any }> }>({});
@@ -99,7 +104,7 @@ export class TableComponent implements OnInit {
   ngOnInit(): void {
     this.scrollX = 'max-content';
     this.scrollY = this._options().fixHeader ? this._options().fixHeader : null;
-    this.setItems();
+    this.setItems(this.params());
   }
 
   async setItems(params?: any) {
@@ -158,7 +163,7 @@ export class TableComponent implements OnInit {
   }
 
   onPageChange(page: number) {
-    this.page = page;
-    this.setItems({ page });
+    this.page.set(page);
+    this.setItems(this.params());
   }
 }
