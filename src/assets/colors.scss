@@ -1,9 +1,14 @@
 @use "tailwindcss";
 
 :root {
-  --primary: #f4b400;
+  --primary-color: #f4b400;
+  --success-color: #52c41a;
+  --text-btn-color: #f0f2f5;
+  --danger-color: #ff4d4f;
+  --warning-color: #ffd666;
+  --custom-test-color: #722ed1;
 }
 
 @theme static {
-  --color-primary: var(--primary);
+  --color-primary: var(--primary-color);
 }

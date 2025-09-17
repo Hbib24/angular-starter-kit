@@ -126,4 +126,8 @@ export abstract class Field<T> {
         : this.required;
     return isRequired;
   }
+
+  clone(): FormField {
+    return new (this.constructor as any)(this);
+  }
 }

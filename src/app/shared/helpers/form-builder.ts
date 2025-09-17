@@ -50,9 +50,7 @@ export class FormBuilder {
   ): void {
     const validators = field.validators;
     if (Array.isArray(validators)) {
-      validators.forEach((validator: ValidatorFn | ValidatorFn[]) => {
-        formGroup.addValidators(validator);
-      });
+      formGroup.get(field.name)?.setValidators(validators);
     } else {
       formGroup.setValidators(validators(formGroup));
 
