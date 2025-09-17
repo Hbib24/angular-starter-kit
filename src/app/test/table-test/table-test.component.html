@@ -2,37 +2,39 @@
   {{ "validators.required".tr() }}
 
   <div class="gap-2 flex items-center pt-2">
-  <!-- <div class="gap-2 flex items-center pt-2">
-    <button nz-button nzType="primary" (click)="filter()">filter drawer</button>
-    <button
-      nz-button
-      (click)="filterTemplate(myTemplateRef, myFooterTemplateRef)"
-    >
-      {{ "filter template".tr({ value: "22x" }) }}
+    <div class="gap-2 flex items-center pt-2">
+      <button nz-button nzType="primary" (click)="filter()">
+        filter drawer
+      </button>
+      <button
+        nz-button
+        (click)="filterTemplate(myTemplateRef, myFooterTemplateRef)"
+      >
+        {{ "filter template".tr({ value: "22x" }) }}
+      </button>
+    </div>
+
+    <div class="gap-2 flex items-center pt-2">
+      <button nz-button (click)="openTemplateModal()">modal template</button>
+      <button nz-button (click)="openComponentModal()">modal component</button>
+      <button nz-button (click)="openInfoModal()">modal openInfoModal</button>
+    </div>
+    <br />
+    <app-filter [fields]="filterFields" [primaryFields]="['test']" />
+    <br />
+    <button (click)="tableRef.addRow({ id: 101, name: 'New Item' })">
+      Add Row
     </button>
-  </div>
 
-  <div class="gap-2 flex items-center pt-2">
-    <button nz-button (click)="openTemplateModal()">modal template</button>
-    <button nz-button (click)="openComponentModal()">modal component</button>
-    <button nz-button (click)="openInfoModal()">modal openInfoModal</button>
-  </div>
-  <br />
-  <app-filter [fields]="filterFields" [primaryFields]="['test']" />
-  <br />
-  <button (click)="tableRef.addRow({ id: 101, name: 'New Item' })">
-    Add Row
-  </button>
-
-  <br /> -->
-  <app-filter (onFilter)="onFilter($event)" [fields]="filterFields" />
-  <app-table
-    #tableRef
-    [itemTemplates]="{ action: actionTemplate }"
-    [columns]="columns"
-    [getter]="getFakeData"
-    (selectedRowsChange)="onSelectedRowsChange($event)"
-    [options]="{
+    <br />
+    <app-filter (onFilter)="onFilter($event)" [fields]="filterFields" />
+    <app-table
+      #tableRef
+      [itemTemplates]="{ action: actionTemplate }"
+      [columns]="columns"
+      [getter]="getFakeData"
+      (selectedRowsChange)="onSelectedRowsChange($event)"
+      [options]="{
       bordered: true,
       fixHeader: '450px',
       footer: myTemplateRef,
@@ -44,30 +46,31 @@
           
 
     }"
-  ></app-table>
+    ></app-table>
+  </div>
+
+  <ng-template #actionTemplate let-data let-index>
+    <button nz-button nzType="link" (click)="tableRef.deleteRow(data.item.id)">
+      Delete: {{ data.item.id }}
+    </button>
+    <button nz-button nzType="link" (click)="tableRef.addRow(data.item)">
+      ADD: {{ data.item.id }}
+    </button>
+  </ng-template>
+
+  <ng-template #myTemplateRef let-data let-drawerRef="drawerRef">
+    value: {{ data?.value }}
+    <button nz-button (click)="drawerRef?.close()">Close Drawer</button>
+  </ng-template>
+  <ng-template #myFooterTemplateRef>
+    <button nz-button nzType="primary" (click)="close()">Close Drawer</button>
+  </ng-template>
+
+  <ng-template #myTemplateRefModal let-data>
+    value: {{ data?.name }}
+    <button nz-button (click)="modalService.closeAll()">Close Template</button>
+  </ng-template>
+  <ng-template #myFooterTemplateModal let-data>
+    <button nz-button (click)="modalService.closeAll()">Close Template</button>
+  </ng-template>
 </div>
-
-<ng-template #actionTemplate let-data let-index>
-  <button nz-button nzType="link" (click)="tableRef.deleteRow(data.item.id)">
-    Delete: {{ data.item.id }}
-  </button>
-  <button nz-button nzType="link" (click)="tableRef.addRow(data.item)">
-    ADD: {{ data.item.id }}
-  </button>
-</ng-template>
-
-<ng-template #myTemplateRef let-data let-drawerRef="drawerRef">
-  value: {{ data?.value }}
-  <button nz-button (click)="drawerRef?.close()">Close Drawer</button>
-</ng-template>
-<ng-template #myFooterTemplateRef>
-  <button nz-button nzType="primary" (click)="close()">Close Drawer</button>
-</ng-template>
-
-<ng-template #myTemplateRefModal let-data>
-  value: {{ data?.name }}
-  <button nz-button (click)="modalService.closeAll()">Close Template</button>
-</ng-template>
-<ng-template #myFooterTemplateModal let-data>
-  <button nz-button (click)="modalService.closeAll()">Close Template</button>
-</ng-template>

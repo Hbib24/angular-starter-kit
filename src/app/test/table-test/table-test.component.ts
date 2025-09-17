@@ -30,7 +30,7 @@ export class TableTestComponent implements OnInit {
         name: 'name',
         label: 'name',
         validators: [Validators.required, Validators.email],
-        validationHint: this.myTemplateRefModal,
+        validationHint: this.myTemplateRefModal(),
       }),
       new TextField({
         name: 'test',

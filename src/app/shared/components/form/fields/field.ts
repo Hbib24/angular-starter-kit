@@ -36,7 +36,7 @@ export interface FieldOptions {
   visible?: boolean | ((formGroup: FormGroup) => boolean);
   hidden?: boolean | ((formGroup: FormGroup) => boolean);
   validators?: ((formGroup: FormGroup) => ValidatorFn[]) | ValidatorFn[];
-  validationHint?: string | TemplateRef<any>;
+  validationHint?: string | string[] | TemplateRef<any>;
   hint?: string | TemplateRef<any>;
   /**
    * Number of columns this field should span in a grid layout.
