@@ -1,4 +1,10 @@
-import { Component, inject, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { Column } from '../../shared/components/table/table.component';
 import { delay, lastValueFrom, of } from 'rxjs';
 import { Getter } from '../../shared/helpers/getter';
@@ -7,6 +13,7 @@ import { ModalService } from '../../shared/services/modal.service';
 import { TemplateField } from '../../shared/components/form/fields/template-field';
 import { TextField } from '../../shared/components/form/fields/text-field';
 import { Validators } from '@angular/forms';
+import { FormField } from '../../shared/components/form/fields/field';
 
 @Component({
   selector: 'app-table-test',
@@ -14,7 +21,24 @@ import { Validators } from '@angular/forms';
   templateUrl: './table-test.component.html',
   styleUrl: './table-test.component.scss',
 })
-export class TableTestComponent {
+export class TableTestComponent implements OnInit {
+  filterFields: FormField[] = [];
+  ngOnInit(): void {
+    this.filterFields = [
+      new TextField({
+        name: 'name',
+        label: 'name',
+        validators: [Validators.required, Validators.email],
+        validationHint: this.myTemplateRefModal,
+      }),
+      new TextField({
+        name: 'test',
+        value: 'test',
+        label: 'test',
+        required: true,
+      }),
+    ];
+  }
   drawerService = inject(DrawerService);
   modalService = inject(ModalService);
   columns: Column[] = [
@@ -175,19 +199,4 @@ export class TableTestComponent {
       okText: 'Close',
     });
   }
-
-  filterFields = [
-    new TextField({
-      name: 'name',
-      label: 'name',
-      validators: [Validators.required, Validators.email],
-      validationHint: this.myTemplateRefModal,
-    }),
-    new TextField({
-      name: 'test',
-      value: 'test',
-      label: 'test',
-      required: true,
-    }),
-  ];
 }

@@ -67,7 +67,6 @@ import { AppRoutingModule } from '../app-routing.module';
     NzAutocompleteModule,
     NzSpinModule,
     NzRadioModule,
-    AppRoutingModule,
   ],
   providers: [
     provideHttpClient(withFetch(), withInterceptorsFromDi()),
