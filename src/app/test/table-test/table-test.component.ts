@@ -1,17 +1,18 @@
 import {
   Component,
-  inject,
   OnInit,
+  ElementRef,
+  inject,
   TemplateRef,
-  ViewChild,
+  viewChild,
 } from '@angular/core';
 import { Column } from '../../shared/components/table/table.component';
 import { delay, lastValueFrom, of } from 'rxjs';
 import { Getter } from '../../shared/helpers/getter';
 import { DrawerService } from '../../shared/services/drawer.service';
 import { ModalService } from '../../shared/services/modal.service';
-import { TemplateField } from '../../shared/components/form/fields/template-field';
 import { TextField } from '../../shared/components/form/fields/text-field';
+import { NumericField } from '../../shared/components/form/fields/numeric-field';
 import { Validators } from '@angular/forms';
 import { FormField } from '../../shared/components/form/fields/field';
 
@@ -44,6 +45,9 @@ export class TableTestComponent implements OnInit {
   columns: Column[] = [
     {
       key: 'id',
+      sortDirections: ['ascend', 'descend', null],
+      sortFn: (a: any, b: any) => (a.id ?? 0) - (b.id ?? 0),
+
       fixed: 'left',
       format: (value: any) => `#${value}`,
 
@@ -52,6 +56,7 @@ export class TableTestComponent implements OnInit {
     {
       key: 'currency',
       type: 'currency',
+      sortFn: (a: any, b: any) => (a.amount ?? 0) - (b.amount ?? 0),
 
       label: 'currency',
     },
@@ -91,7 +96,7 @@ export class TableTestComponent implements OnInit {
       label: 'action',
     },
   ];
-  data = Array.from({ length: 1000 }).map((_, i) => ({
+  data = Array.from({ length: 3 }).map((_, i) => ({
     id: i + 1,
     createdAt: new Date().toISOString(),
     currency: 'usd',
@@ -119,14 +124,10 @@ export class TableTestComponent implements OnInit {
     );
   };
 
-  @ViewChild('myFooterTemplateRef', { static: true })
-  myFooterTemplateRef!: TemplateRef<any>;
-  @ViewChild('myTemplateRef', { static: true })
-  myTemplateRef!: TemplateRef<any>;
-  @ViewChild('myTemplateRefModal', { static: true })
-  myTemplateRefModal!: TemplateRef<any>;
-  @ViewChild('myFooterTemplateModal', { static: true })
-  myFooterTemplateModal!: TemplateRef<any>;
+  myFooterTemplateRef = viewChild<TemplateRef<any>>('myFooterTemplateRef');
+  myTemplateRef = viewChild<TemplateRef<any>>('myTemplateRef');
+  myTemplateRefModal = viewChild<TemplateRef<any>>('myTemplateRefModal');
+  myFooterTemplateModal = viewChild<TemplateRef<any>>('myFooterTemplateModal');
 
   filter() {
     const ref = this.drawerService.openComponent({
@@ -134,7 +135,7 @@ export class TableTestComponent implements OnInit {
       component: TableTestComponent,
       extra: 'hakim',
       params: { value: 123 },
-      footer: this.myFooterTemplateRef,
+      footer: this.myFooterTemplateRef(),
       handleCancel: async () => {
         console.log('Cancel clicked. Drawer ref:', ref);
         await this.getFakeData();
@@ -146,14 +147,15 @@ export class TableTestComponent implements OnInit {
   }
 
   filterTemplate(tpl: any, footerTpl: any) {
-    this.myTemplateRef = tpl;
-    this.myFooterTemplateRef = footerTpl;
-    this.drawerService.openTemplate({
-      title: 'My Drawer template',
-      tplContent: this.myTemplateRef,
-      tplFooter: this.myFooterTemplateRef,
-      params: { value: 123 },
-    });
+    const myTemplateRef = this.myTemplateRef();
+    if (myTemplateRef) {
+      this.drawerService.openTemplate({
+        title: 'My Drawer template',
+        tplContent: myTemplateRef,
+        tplFooter: this.myFooterTemplateRef(),
+        params: { value: 123 },
+      });
+    }
   }
 
   async openInfoModal() {
@@ -174,17 +176,20 @@ export class TableTestComponent implements OnInit {
   }
 
   openTemplateModal() {
-    const modalRef = this.modalService.openTemplate({
-      title: 'Template Modal',
-      icon: 'info-circle',
-      tplContent: this.myTemplateRefModal,
-      width: '800px',
+    const myTemplateRefModal = this.myTemplateRefModal();
+    if (myTemplateRefModal) {
+      const modalRef = this.modalService.openTemplate({
+        title: 'Template Modal',
+        icon: 'info-circle',
+        tplContent: myTemplateRefModal,
+        width: '800px',
 
-      tplFooter: this.myFooterTemplateModal,
-      data: { name: 'Hakim' },
-      onOk: () => console.log('OK clicked on template'),
-      onCancel: (ref) => ref.destroy(),
-    });
+        tplFooter: this.myFooterTemplateModal(),
+        data: { name: 'Hakim' },
+        onOk: () => console.log('OK clicked on template'),
+        onCancel: (ref) => ref.destroy(),
+      });
+    }
   }
 
   openComponentModal() {
@@ -198,5 +203,12 @@ export class TableTestComponent implements OnInit {
       params: { name: 'Hakim' },
       okText: 'Close',
     });
+  }
+
+  acceptSelect(data: any) {
+    return data.id % 2 === 0;
+  }
+  onSelectedRowsChange(data: any) {
+    console.log('dataselected', data);
   }
 }

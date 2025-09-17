@@ -1,4 +1,10 @@
-<div class="flex gap-2 items-center">
+<div
+  [ngClass]="{
+    'mb-2': !this.primaryFields().length
+  }"
+  class="flex gap-2"
+>
+  @if(this.primaryFields().length) {
   <app-form
     [fields]="_primaryFields()"
     [showSubmit]="false"
@@ -6,12 +12,8 @@
     [submitOnChange]="true"
     (onSubmit)="handlePrimaryValueChanges($event)"
   />
-  <app-button
-    [text]="title"
-    (onClick)="openFilter()"
-    icon="filter"
-    class="mt-1.5"
-  />
+  }
+  <app-button [text]="title" (onClick)="openFilter()" icon="filter" />
 </div>
 
 <ng-template #drawerTemplate>

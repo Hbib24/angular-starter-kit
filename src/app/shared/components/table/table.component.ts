@@ -1,20 +1,24 @@
 import {
   Component,
   computed,
-  Input,
   input,
   OnInit,
   output,
+  signal,
   TemplateRef,
 } from '@angular/core';
 import { defaultGetter, Getter } from '../../helpers/getter';
 import { FormatValueService } from '../../services/value-formater.service';
 import { WidthCalculator } from '../../services/width-calculator.service';
 import {
+  NzTableFilterFn,
+  NzTableFilterList,
   NzTableLayout,
   NzTablePaginationPosition,
   NzTablePaginationType,
   NzTableSize,
+  NzTableSortFn,
+  NzTableSortOrder,
 } from 'ng-zorro-antd/table';
 
 export interface Column {
@@ -24,19 +28,25 @@ export interface Column {
   hidden?: boolean;
   fixed?: 'left' | 'right';
   type?: 'date' | 'time' | 'datetime' | 'currency';
+  sortDirections?: NzTableSortOrder[];
+
+  sortOrder?: NzTableSortOrder | null;
+
+  sortFn?: NzTableSortFn<any> | null;
+
   format?: (value: any, row: any) => any;
 }
 
 export interface Setting {
+  checkbox: boolean;
+  rowSelectable?: (row: any) => boolean;
   bordered: boolean;
   loading: boolean;
   pagination: boolean;
   sizeChanger: boolean;
-  title: boolean;
-  header: boolean;
-  footer: boolean;
+  header: TemplateRef<{ $implicit: any }> | string | null;
+  footer: TemplateRef<{ $implicit: any }> | string | null;
   expandable: boolean;
-  checkbox: boolean;
   fixHeader: string | null;
   noResult: boolean;
   ellipsis: boolean;
@@ -55,11 +65,14 @@ export interface Setting {
   styleUrls: ['./table.component.scss'],
 })
 export class TableComponent implements OnInit {
+  setOfCheckedId = new Set<string | number>();
+  checked = false;
+  indeterminate = false;
   protected items: any[] = [];
   protected loading = false;
   protected error = false;
   protected totalSize = 0;
-  protected page = 1;
+  protected page = signal(1);
 
   protected scrollX: string | null = null;
   protected scrollY: string | null = null;
@@ -68,9 +81,8 @@ export class TableComponent implements OnInit {
     loading: false,
     pagination: true,
     sizeChanger: false,
-    title: false,
-    header: true,
-    footer: false,
+    header: null,
+    footer: null,
     expandable: false,
     checkbox: false,
     fixHeader: null,
@@ -89,9 +101,14 @@ export class TableComponent implements OnInit {
     ...this.defaultOptions,
     ...(this.options() ?? {}),
   }));
+  params = computed(() => {
+    return { ...this.filters(), page: this.page() };
+  });
 
   columns = input.required<Column[]>();
+  filters = input<{ [key: string]: any }>({});
   getter = input<Getter>(defaultGetter);
+  selectedRowsChange = output<any[]>();
   pagination = input(true);
   itemTemplates = input<{ [key: string]: TemplateRef<{ $implicit: any }> }>({});
   refreshEvent = output<{ [key: string]: any }>();
@@ -99,7 +116,7 @@ export class TableComponent implements OnInit {
   ngOnInit(): void {
     this.scrollX = 'max-content';
     this.scrollY = this._options().fixHeader ? this._options().fixHeader : null;
-    this.setItems();
+    this.setItems(this.params());
   }
 
   async setItems(params?: any) {
@@ -114,6 +131,31 @@ export class TableComponent implements OnInit {
     } finally {
       this.loading = false;
     }
+  }
+
+  addRow(newRow: any): void {
+    if (newRow.id == null) {
+      newRow.id = crypto.randomUUID();
+    }
+    this.items = [...this.items, newRow];
+
+    this.totalSize = this.items.length;
+    this.refreshCheckedStatus();
+    this.emitSelectedRows();
+  }
+
+  deleteRow(value: string | number, key?: string): void {
+    key = key || 'id';
+
+    this.items = this.items.filter((row) => row[key] !== value);
+
+    if (this.setOfCheckedId.has(value)) {
+      this.setOfCheckedId.delete(value);
+    }
+
+    this.totalSize = this.items.length;
+    this.refreshCheckedStatus();
+    this.emitSelectedRows();
   }
 
   getTemplate(key: string): TemplateRef<{ $implicit: any }> | undefined {
@@ -158,7 +200,42 @@ export class TableComponent implements OnInit {
   }
 
   onPageChange(page: number) {
-    this.page = page;
-    this.setItems({ page });
+    this.page.set(page);
+    this.setItems(this.params());
+  }
+
+  updateCheckedSet(id: string | number, checked: boolean): void {
+    if (checked) this.setOfCheckedId.add(id);
+    else this.setOfCheckedId.delete(id);
+  }
+
+  refreshCheckedStatus(): void {
+    const enabled = this.items.filter(
+      (row) => this._options().rowSelectable?.(row) ?? true
+    );
+    this.checked = enabled.every((row) => this.setOfCheckedId.has(row.id));
+    this.indeterminate =
+      enabled.some((row) => this.setOfCheckedId.has(row.id)) && !this.checked;
+  }
+
+  private emitSelectedRows(): void {
+    const selected = this.items.filter((item) =>
+      this.setOfCheckedId.has(item.id)
+    );
+    this.selectedRowsChange.emit(selected);
+  }
+
+  onItemChecked(id: string | number, checked: boolean): void {
+    this.updateCheckedSet(id, checked);
+    this.refreshCheckedStatus();
+    this.emitSelectedRows();
+  }
+
+  onAllChecked(checked: boolean): void {
+    this.items
+      .filter((row) => this._options().rowSelectable?.(row) ?? true)
+      .forEach((row) => this.updateCheckedSet(row.id, checked));
+    this.refreshCheckedStatus();
+    this.emitSelectedRows();
   }
 }

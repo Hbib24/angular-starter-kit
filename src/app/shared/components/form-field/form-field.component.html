@@ -13,7 +13,7 @@
       class="!col-span-2"
       [nzValidateStatus]="isDirty && !isValid ? 'error' : ''"
       [nzHasFeedback]="field().showFeedback"
-      [nzErrorTip]="validatorHint"
+      [nzErrorTip]="getValidationHint(field())"
       [nzExtra]="isDirty && !isValid ? undefined : field().hint"
     >
       @if(!loading) { @if (adapter.isTextField) {
