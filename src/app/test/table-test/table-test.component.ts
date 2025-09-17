@@ -180,7 +180,8 @@ export class TableTestComponent {
     new TextField({
       name: 'name',
       label: 'name',
-      validators: [Validators.email],
+      validators: [Validators.required, Validators.email],
+      validationHint: this.myTemplateRefModal,
     }),
     new TextField({
       name: 'test',

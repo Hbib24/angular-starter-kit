@@ -35,6 +35,7 @@ import { ButtonComponent } from './components/button/button.component';
 import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
+import { AppRoutingModule } from '../app-routing.module';
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
     NzAutocompleteModule,
     NzSpinModule,
     NzRadioModule,
+    AppRoutingModule,
   ],
   providers: [
     provideHttpClient(withFetch(), withInterceptorsFromDi()),
