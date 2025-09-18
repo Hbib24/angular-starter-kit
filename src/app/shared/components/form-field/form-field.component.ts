@@ -52,7 +52,7 @@ export class FormFieldComponent {
     const hints = this.field().validationHint;
 
     // If it's a single string, return it translated
-    if (typeof hints === 'string') return hints;
+    if (typeof hints === 'string') return hints.tr();
 
     // If it's a TemplateRef, return as-is
     if (hints instanceof TemplateRef) return hints;

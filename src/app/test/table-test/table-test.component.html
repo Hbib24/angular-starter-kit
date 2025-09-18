@@ -1,18 +1,12 @@
 <div style="align-items: center">
-  {{ "validators.required".tr() }}
-
-  <div class="gap-2 flex items-center pt-2">
-    <div class="gap-2 flex items-center pt-2">
-      <button nz-button nzType="primary" (click)="filter()">
-        filter drawer
-      </button>
-      <button
-        nz-button
-        (click)="filterTemplate(myTemplateRef, myFooterTemplateRef)"
-      >
-        {{ "filter template".tr({ value: "22x" }) }}
-      </button>
-    </div>
+  <div class="flex flex-row items-center">
+    <button nz-button nzType="primary" (click)="filter()">filter drawer</button>
+    <button
+      nz-button
+      (click)="filterTemplate(myTemplateRef, myFooterTemplateRef)"
+    >
+      {{ "filter template".tr({ value: "22x" }) }}
+    </button>
 
     <div class="gap-2 flex items-center pt-2">
       <button nz-button (click)="openTemplateModal()">modal template</button>
@@ -22,12 +16,13 @@
     <br />
     <app-filter [fields]="filterFields" [primaryFields]="['test']" />
     <br />
-    <button (click)="tableRef.addRow({ id: 101, name: 'New Item' })">
-      Add Row
-    </button>
 
     <br />
-    <app-filter (onFilter)="onFilter($event)" [fields]="filterFields" />
+  </div>
+  <div class="gap-2 flex items-center pt-2">
+    <ng-template #filterTemplat>
+      <app-filter (onFilter)="onFilter($event)" [fields]="filterFields" />
+    </ng-template>
     <app-table
       #tableRef
       [itemTemplates]="{ action: actionTemplate }"
@@ -38,8 +33,7 @@
       bordered: true,
       fixHeader: '450px',
       footer: myTemplateRef,
-      header: 'header title',
-          checkbox: true,
+      header: filterTemplat,          checkbox: true,
           rowSelectable: acceptSelect,
               
 

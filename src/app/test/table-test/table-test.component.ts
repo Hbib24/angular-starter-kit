@@ -126,6 +126,7 @@ export class TableTestComponent implements OnInit {
 
   myFooterTemplateRef = viewChild<TemplateRef<any>>('myFooterTemplateRef');
   myTemplateRef = viewChild<TemplateRef<any>>('myTemplateRef');
+  filterTemplat = viewChild<TemplateRef<any>>('filterTemplat');
   myTemplateRefModal = viewChild<TemplateRef<any>>('myTemplateRefModal');
   myFooterTemplateModal = viewChild<TemplateRef<any>>('myFooterTemplateModal');
 
