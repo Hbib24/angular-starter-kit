@@ -14,8 +14,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideHttpClient } from '@angular/common/http';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
-import { AppInitializerService } from './shared/services/app-init.service';
-import { NZ_I18N, fr_FR } from 'ng-zorro-antd/i18n';
+import { AppInitializerService } from './core/services/app-init.service';
+import { NZ_I18N } from 'ng-zorro-antd/i18n';
+
+export function nzI18nFactory(init: AppInitializerService) {
+  return init.nzLocale; // initial locale at bootstrap
+}
 
 @NgModule({
   declarations: [
@@ -26,8 +30,17 @@ import { NZ_I18N, fr_FR } from 'ng-zorro-antd/i18n';
   ],
   imports: [BrowserModule, BrowserAnimationsModule, AppRoutingModule],
   providers: [
-    { provide: LOCALE_ID, useValue: 'fr' },
-    { provide: NZ_I18N, useValue: fr_FR },
+    {
+      provide: NZ_I18N,
+      useFactory: nzI18nFactory,
+      deps: [AppInitializerService],
+    },
+    {
+      provide: LOCALE_ID,
+      useFactory: (init: AppInitializerService) => init.currentLang,
+      deps: [AppInitializerService],
+    },
+
     {
       provide: APP_INITIALIZER,
       useFactory: (appInit: AppInitializerService) => () => appInit,
