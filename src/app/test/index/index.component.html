@@ -7,6 +7,7 @@
       <a [routerLink]="['/', 'test', 'table']">Table</a>
     </li>
   </ul>
+  <app-button (onClick)="save()" text="save"></app-button>
   <div class="mt-4 p-4">
     <div class="mt-4 flex flex-row gap-2 items-center justify-center">
       <button nz-button nzType="primary" (click)="changeLanguage('en')">
@@ -62,3 +63,14 @@
     <app-icon class="*:text-white" icon="brand-tabler" />
   </a>
 </div>
+
+<ng-template #closeIconnNotif> hakimmm </ng-template>
+
+<ng-template #notificationBtnTpl let-notification>
+  <button nz-button nzType="primary" size="small" (click)="onAccept(notif)">
+    Accept
+  </button>
+  <button nz-button nzType="default" size="small" (click)="onDecline(notif)">
+    Decline
+  </button>
+</ng-template>

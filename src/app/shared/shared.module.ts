@@ -35,7 +35,8 @@ import { ButtonComponent } from './components/button/button.component';
 import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
-import { AppRoutingModule } from '../app-routing.module';
+import { NzAlertModule } from 'ng-zorro-antd/alert';
+import { NotificationService } from './services/notification.service';
 
 @NgModule({
   declarations: [
@@ -67,6 +68,7 @@ import { AppRoutingModule } from '../app-routing.module';
     NzAutocompleteModule,
     NzSpinModule,
     NzRadioModule,
+    NzAlertModule,
   ],
   providers: [
     provideHttpClient(withFetch(), withInterceptorsFromDi()),
@@ -74,6 +76,7 @@ import { AppRoutingModule } from '../app-routing.module';
     HttpService,
     DrawerService,
     ModalService,
+    NotificationService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ],
   exports: [

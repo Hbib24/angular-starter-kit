@@ -1,7 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, TemplateRef, viewChild } from '@angular/core';
 import { initializeTranslationExtensionsFactory } from '../../core/helpers/translations.extentiosn';
 import { TranslateService } from '@ngx-translate/core';
 import { ar_EG, en_US, fr_FR, NzI18nService } from 'ng-zorro-antd/i18n';
+import { NotificationService } from '../../shared/services/notification.service';
 const localeMap: Record<string, any> = {
   fr: fr_FR,
   en: en_US,
@@ -16,8 +17,12 @@ const localeMap: Record<string, any> = {
 export class IndexComponent {
   translate = inject(TranslateService);
   nzI18n = inject(NzI18nService);
+  notif = inject(NotificationService);
   disabled = false;
   loading = false;
+
+  btnTemplate = viewChild<TemplateRef<any>>('notificationBtnTpl');
+  closeIconnNotif = viewChild<TemplateRef<any>>('closeIconnNotif');
 
   fakeActionAsync() {
     this.loading = true;
@@ -46,5 +51,25 @@ export class IndexComponent {
       // ✅ refresh your String.prototype.tr extension
       initializeTranslationExtensionsFactory(this.translate)();
     });
+  }
+
+  save() {
+    // do work…
+    this.notif.success({
+      buttons: this.btnTemplate(),
+
+      title: 'Enregistré',
+      content: 'Les données ont été sauvegardées avec succès.',
+      duration: 3000,
+    });
+  }
+  onAccept(notification: NotificationService) {
+    console.log('Accepted!');
+    notification.close();
+  }
+
+  onDecline(notification: NotificationService) {
+    console.log('Declined!');
+    notification.closeAll();
   }
 }
