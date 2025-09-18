@@ -3,6 +3,10 @@
 import { platformBrowser } from '@angular/platform-browser';
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
+import { registerLocaleData } from '@angular/common';
+import fr from '@angular/common/locales/fr';
+
+registerLocaleData(fr);
 
 platformBrowser()
   .bootstrapModule(AppModule, {

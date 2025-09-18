@@ -15,6 +15,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AppInitializerService } from './shared/services/app-init.service';
+import { NZ_I18N, fr_FR } from 'ng-zorro-antd/i18n';
 
 @NgModule({
   declarations: [
@@ -26,12 +27,14 @@ import { AppInitializerService } from './shared/services/app-init.service';
   imports: [BrowserModule, BrowserAnimationsModule, AppRoutingModule],
   providers: [
     { provide: LOCALE_ID, useValue: 'fr' },
+    { provide: NZ_I18N, useValue: fr_FR },
     {
       provide: APP_INITIALIZER,
       useFactory: (appInit: AppInitializerService) => () => appInit,
       deps: [AppInitializerService],
       multi: true,
     },
+
     provideBrowserGlobalErrorListeners(),
     provideHttpClient(),
     provideTranslateService({
