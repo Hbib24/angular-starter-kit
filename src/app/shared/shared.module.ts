@@ -37,6 +37,8 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { NotificationService } from './services/notification.service';
+import { DividerComponent } from './components/divider/divider.component';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
 
 @NgModule({
   declarations: [
@@ -48,6 +50,7 @@ import { NotificationService } from './services/notification.service';
     IconComponent,
     CurrencyDisplayComponent,
     ButtonComponent,
+    DividerComponent,
   ],
   imports: [
     CommonModule,
@@ -69,6 +72,7 @@ import { NotificationService } from './services/notification.service';
     NzSpinModule,
     NzRadioModule,
     NzAlertModule,
+    NzDividerModule,
   ],
   providers: [
     provideHttpClient(withFetch(), withInterceptorsFromDi()),
@@ -87,6 +91,7 @@ import { NotificationService } from './services/notification.service';
     IconComponent,
     CurrencyDisplayComponent,
     ButtonComponent,
+    DividerComponent,
   ],
 })
 export class SharedModule {}

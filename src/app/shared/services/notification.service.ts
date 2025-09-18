@@ -114,4 +114,8 @@ export class NotificationService {
   hasOpen(): boolean {
     return this.notifications.size > 0;
   }
+  closeLast(): void {
+    const last = Array.from(this.notifications.values()).pop();
+    if (last) this.close(last.id);
+  }
 }

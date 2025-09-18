@@ -20,6 +20,8 @@
         fr
       </button>
     </div>
+    <app-divider nzText="im divider"></app-divider>
+
     <router-outlet></router-outlet>
   </div>
 </div>
@@ -67,10 +69,20 @@
 <ng-template #closeIconnNotif> hakimmm </ng-template>
 
 <ng-template #notificationBtnTpl let-notification>
-  <button nz-button nzType="primary" size="small" (click)="onAccept(notif)">
+  <button
+    nz-button
+    nzType="primary"
+    size="small"
+    (click)="onAccept(notification)"
+  >
     Accept
   </button>
-  <button nz-button nzType="default" size="small" (click)="onDecline(notif)">
+  <button
+    nz-button
+    nzType="default"
+    size="small"
+    (click)="onDecline(notification)"
+  >
     Decline
   </button>
 </ng-template>

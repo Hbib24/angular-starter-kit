@@ -3,6 +3,7 @@ import { initializeTranslationExtensionsFactory } from '../../core/helpers/trans
 import { TranslateService } from '@ngx-translate/core';
 import { ar_EG, en_US, fr_FR, NzI18nService } from 'ng-zorro-antd/i18n';
 import { NotificationService } from '../../shared/services/notification.service';
+import { NzNotificationComponent } from 'ng-zorro-antd/notification';
 const localeMap: Record<string, any> = {
   fr: fr_FR,
   en: en_US,
@@ -63,13 +64,13 @@ export class IndexComponent {
       duration: 3000,
     });
   }
-  onAccept(notification: NotificationService) {
+  onAccept(notification: NzNotificationComponent) {
     console.log('Accepted!');
     notification.close();
   }
 
-  onDecline(notification: NotificationService) {
+  onDecline(notification: NzNotificationComponent) {
     console.log('Declined!');
-    notification.closeAll();
+    notification.close();
   }
 }
