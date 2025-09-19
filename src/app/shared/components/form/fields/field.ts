@@ -46,8 +46,6 @@ export interface FieldOptions {
   /**
    * array representing field names that this field depends on
    * state will change based on the value of this dependency list
-   *
-   * REQUIRED IF USING CONDITIONAL REQUIRED, READONLY, VISIBILITY
    */
   dependencies?: string[];
   showFeedback?: boolean;
@@ -74,7 +72,7 @@ export abstract class Field<T> {
   hint?: string | TemplateRef<any>;
   colspan: number;
   isTemplate = false;
-  formatValue?: (value: any) => any;
+  formatValue: (value: any) => any;
   onValueChange?: (value: any, control: FormControl) => void;
 
   constructor(options: FieldOptions) {
@@ -94,7 +92,7 @@ export abstract class Field<T> {
     this.dependencies = options.dependencies || [];
     this.showFeedback =
       options.showFeedback === undefined ? true : options.showFeedback;
-    this.formatValue = options.formatValue;
+    this.formatValue = options.formatValue || ((value) => value);
     this.onValueChange = options.onValueChange;
   }
 

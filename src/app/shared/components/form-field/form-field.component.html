@@ -78,18 +78,23 @@
         [nzId]="field().name"
         [nzShowSearch]="true"
         [nzAllowClear]="true"
+        [nzCustomTemplate]="selectedTemplate"
         [nzMode]="adapter.isMultiSelectField ? 'multiple' : 'default'"
         [nzPlaceHolder]="field().placeholder || null"
       >
-        @for (item of selectOptions; track $index) { @if (typeof item.label ===
-        'string') {
+        @for (item of selectOptions; track $index) {
         <nz-option
-          [nzLabel]="item.label"
+          [nzLabel]="getOptionLabelString(item)"
           [nzValue]="item.value"
           [nzDisabled]="item.disabled"
+          [nzCustomContent]="true"
         >
+          <ng-container
+            [ngTemplateOutletContext]="{ option: item }"
+            [ngTemplateOutlet]="optionTemplate"
+          />
         </nz-option>
-        } }
+        }
       </nz-select>
       } @else if(adapter.isRadioField) {
       <nz-radio-group
@@ -97,12 +102,22 @@
         [formControlName]="field().name"
         [nzName]="field().name"
       >
-        @for (item of selectOptions; track $index) { @if (typeof item.label
-        ==='string') { @if (adapter.fieldAsRadioField.type === 'default') {
-        <label nz-radio [nzValue]="item.value">{{ item.label }}</label>
+        @for (item of selectOptions; track $index) { @if
+        (adapter.fieldAsRadioField.type === 'default') {
+        <label nz-radio [nzValue]="item.value">
+          <ng-container
+            [ngTemplateOutlet]="optionTemplate"
+            [ngTemplateOutletContext]="{ option: item }"
+          />
+        </label>
         } @else {
-        <label nz-radio-button [nzValue]="item.value">{{ item.label }}</label>
-        } } }
+        <label nz-radio-button [nzValue]="item.value">
+          <ng-container
+            [ngTemplateOutlet]="optionTemplate"
+            [ngTemplateOutletContext]="{ option: item }"
+          />
+        </label>
+        } }
       </nz-radio-group>
       } @else if (adapter.isCheckField) { @if(adapter.fieldAsCheckField.type ==
       'default') {
@@ -156,4 +171,26 @@
   @if (softLoading) {
   <app-icon class="animate-spin *:text-primary" icon="loader-2" />
   }
+</ng-template>
+
+<ng-template let-option="option" #optionTemplate>
+  @if(option.type === 'currency') {
+  <app-currency-display [isoCode]="option.label" />
+  } @else if (typeof option.label === 'string') {
+  {{ option.label }}
+  } @else {
+  <ng-container
+    [ngTemplateOutletContext]="{ option: option }"
+    [ngTemplateOutlet]="option.label"
+  />
+  }
+</ng-template>
+
+<ng-template #selectedTemplate let-selected>
+  <ng-container
+    [ngTemplateOutlet]="optionTemplate"
+    [ngTemplateOutletContext]="{
+      option: getOption(selected.nzValue)
+    }"
+  />
 </ng-template>

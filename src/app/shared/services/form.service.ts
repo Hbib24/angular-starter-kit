@@ -54,7 +54,7 @@ export class FormService {
       }
 
       if (value !== '' && value !== null && value !== undefined) {
-        result[key] = value;
+        result[key] = item?.formatValue(value);
       }
     });
 

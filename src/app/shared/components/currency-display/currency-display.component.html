@@ -1,12 +1,10 @@
-<div
-  class="flex flex-row align-items-center"
-  style="gap: 8px; padding-right: 8px"
->
+<div class="flex items-center gap-2">
   <img
     [alt]="isoCode()"
+    class="w-5 h-5"
     [src]="ImagesConstants.FLAGS_PATH + isoCode().toUpperCase() + '.png'"
   />
   @if (displayText()) {
-  <span>{{ isoCode().toUpperCase() }}</span>
+  <div class="font-semibold">{{ isoCode().toUpperCase() }}</div>
   }
 </div>

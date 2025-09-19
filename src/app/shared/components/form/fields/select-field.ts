@@ -4,7 +4,11 @@ import { FormGroup } from '@angular/forms';
 
 export interface SelectOption {
   value: string | number;
-  label: string | TemplateRef<any>;
+  label: string | TemplateRef<SelectOption>;
+  /*
+   * Overrides label display
+   */
+  type?: 'currency';
   disabled?: boolean;
   hidden?: boolean;
   visisble?: boolean;

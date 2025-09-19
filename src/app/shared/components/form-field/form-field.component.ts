@@ -17,10 +17,12 @@ export class FormFieldComponent {
   readonly inline = input<boolean>(false);
 
   readonly control = computed(() => this.form().get(this.field().name));
+
   getValidationHint(field: any): string {
     const hint = field.validationHint;
     return typeof hint === 'string' ? hint.tr() : '';
   }
+
   ngOnInit() {
     this.adapter = new FieldAdapter(this.field());
     if (
@@ -40,6 +42,14 @@ export class FormFieldComponent {
   loading = false;
   softLoading = false;
   adapter!: FieldAdapter;
+
+  getOptionLabelString(option: SelectOption) {
+    return typeof option.label === 'string' ? option.label.tr() : '';
+  }
+
+  getOption(value: string) {
+    return this.selectOptions.find((option) => option.value === value);
+  }
 
   get isRequired() {
     return this.control()?.hasValidator(Validators.required);

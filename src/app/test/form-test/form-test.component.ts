@@ -27,6 +27,7 @@ export class FormTestComponent {
     'templateFieldContent'
   );
   templateFieldLabel = viewChild<TemplateRef<unknown>>('templateFieldLabel');
+  optionTemplate = viewChild<TemplateRef<SelectOption>>('optionTemplate');
 
   submit(values: any) {
     console.table(values);
@@ -61,12 +62,21 @@ export class FormTestComponent {
       validationHint: 'Input between 1 and 10',
     }),
     new SelectField({
+      name: 'curr',
+      label: 'Select',
+      options: [
+        { label: 'EUR', value: '1', type: 'currency' },
+        { label: 'USD', value: '2', type: 'currency' },
+      ],
+      colspan: 12,
+    }),
+    new SelectField({
       name: 'select',
       label: 'Select',
       options: () => {
         return lastValueFrom(
           of([
-            { label: 'Option 1', value: '1' },
+            { label: this.optionTemplate() || '', value: '1' },
             { label: 'Option 2', value: '2' },
             { label: 'Option 3', value: '3' },
           ]).pipe(delay(2000))
@@ -86,7 +96,7 @@ export class FormTestComponent {
           return [{ label: 'Option 1', value: '1' }];
         return lastValueFrom(
           of([
-            { label: 'Option 1', value: '1' },
+            { label: this.optionTemplate() || '', value: '1' },
             { label: 'Option 2', value: '2' },
             { label: 'Option 3', value: '3' },
           ]).pipe(delay(2000))
